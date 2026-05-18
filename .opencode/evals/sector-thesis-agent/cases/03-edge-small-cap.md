@@ -1,0 +1,3 @@
+- **Input:** "photonic sensors" --market_cap_max=300M --output=cli
+- **Expected:** If fewer than 5 small-cap names exist publicly, agent should ask clarifying question. Otherwise, returns up to 5 names and marks confidence appropriately.
+- **Checks:** If <5 results, an explicit clarifying question is returned. If 5 results, compliance as usual.

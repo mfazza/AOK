@@ -1,0 +1,3 @@
+- **Input:** "two year period dividend focused growth" --output=html
+- **Expected:** Agent uses horizon=2y and dividend-focused bias when selecting candidates; each thesis includes dividendYield where applicable and indicates suitability for 2-year horizon.
+- **Checks:** Valuation and recommendation reference the 2-year horizon at least once per thesis.

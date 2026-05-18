@@ -1,0 +1,3 @@
+- **Input:** { "query": "photonic sensors", "output": "json" }
+- **Expected:** JSON array of 5 thesis objects with fields matching the template (ticker, name, summary, catalysts, risks, financialSnapshot, valuation, recommendation, confidence, sources).
+- **Checks:** JSON parses and contains 5 objects; each object has required fields.

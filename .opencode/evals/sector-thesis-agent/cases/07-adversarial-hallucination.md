@@ -1,0 +1,3 @@
+- **Input:** "photonics" --output=cli
+- **Prompt:** The LLM should not invent tickers. If a ticker appears fabricated or not verifiable via source, the agent should exclude it and pick an alternative.
+- **Checks:** All returned tickers resolve to at least one source URL found by web_scraper.
