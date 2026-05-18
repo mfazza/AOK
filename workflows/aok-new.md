@@ -51,8 +51,16 @@ UX Rules:
 
 ## Step 1: The Narrative Brain-Dump
 
-If `$ARGUMENTS` is empty, ask the user for a freeform description:
-> "Tell me about the agent you want to build. What is its name, what is its primary goal, and how should it achieve it? Feel free to describe the step-by-step process or paste in existing instructions."
+If `$ARGUMENTS` is empty, use the `ask_user` tool to capture the agent's description in a text box:
+
+```json
+ask_user([{
+  "header": "Agent Design",
+  "type": "text",
+  "question": "Tell me about the agent you want to build. What is its name, its primary goal, and how should it achieve it?",
+  "placeholder": "e.g. I want a PR reviewer named 'code-guard' that checks for security leaks..."
+}])
+```
 
 Wait for the user's description.
 
