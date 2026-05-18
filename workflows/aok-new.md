@@ -22,7 +22,8 @@ Required files for this workflow:
 </required_reading>
 
 <questioning_format>
-**ALL questions to the user MUST use the `question()` selector format.**
+**CRITICAL: ALL questions to the user MUST use the `question()` selector format.**
+**NEVER output a numbered list of questions as plain text. Do not ask for "Agent name and short handle", "One-sentence purpose", etc. in a single markdown block.**
 
 UX Rules:
 - ONLY output the `question([{...}])` block when asking a question. DO NOT prepend conversational text.
@@ -170,7 +171,7 @@ question([{
 
 ## Step 2: Interview (3-5 questions, adaptive)
 
-Ask questions ONE AT A TIME using `question()` format. Stop when you have enough to proceed.
+**CRITICAL RULE: You MUST ask these questions ONE AT A TIME using the `question([{...}])` JSON format. Wait for the user to answer the first question before outputting the second question. NEVER output all the questions at once. NEVER output plain text questions like "1. Agent name...".**
 
 **Question 1: Scope & Task**
 ```json
@@ -552,6 +553,8 @@ Present the final report with tables:
 </process>
 
 <guardrails>
+- **FATAL ERROR:** Outputting a numbered list of questions (e.g. "1. Agent name...", "2. Purpose...") is strictly forbidden. You must ALWAYS use the `question([{...}])` JSON format for ANY user interaction.
+- ALWAYS ask ONE question at a time. Wait for the user to answer before asking the next one.
 - ALWAYS use `question()` format for user interaction — never plain-text questions
 - ALWAYS include opinionated options with the recommended choice marked
 - ALWAYS end option lists with a freeform escape ("Something else (I'll describe)")
