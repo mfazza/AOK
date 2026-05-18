@@ -39,11 +39,12 @@ Use this skill when:
 ## Core Principles
 
 1. **Tools add determinism** — Any step that should "always work the same way" becomes a tool
-2. **Skills encode knowledge** — Procedural knowledge loaded on-demand, not bloating prompts
-3. **Evals are mandatory** — Every agent ships with test cases proving it works
-4. **Tables are the output** — Results are always presented as clear pass/fail tables
-5. **Any agent can be evaluated** — Not limited to AOK-created agents
-6. **Multi-model testing** — Compare performance across models before committing
+2. **Skills encode conditional knowledge** — Niche procedural knowledge is loaded on-demand, not bloating prompts or global context
+3. **Global Context is for universal rules** — Repo-wide conventions and best practices belong in root `AGENTS.md` or `GEMINI.md` files
+4. **Evals are mandatory** — Every agent ships with test cases proving it works
+5. **Tables are the output** — Results are always presented as clear pass/fail tables
+6. **Any agent can be evaluated** — Not limited to AOK-created agents
+7. **Multi-model testing** — Compare performance across models before committing
 
 ## Agent Architecture Decision Tree
 

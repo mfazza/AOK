@@ -176,15 +176,20 @@ The agent can now load this skill on-demand when {trigger condition}.
 - Include anti-patterns — knowing what NOT to do is as valuable as knowing what to do
 </skill_design_principles>
 
-<skill_vs_prompt>
+<knowledge_routing>
+**Put in Global Context (AGENTS.md / GEMINI.md) when:**
+- The knowledge dictates universal best practices or tech stack rules
+- The rule applies repo-wide
+- Every agent and developer needs to know it implicitly
+
 **Put in the SKILL when:**
 - Knowledge is >20 lines
-- Knowledge is only needed sometimes
-- Knowledge could apply to multiple agents
+- Knowledge is only needed *conditionally* (on-demand)
 - Knowledge has reference tables or decision trees
+- Knowledge applies to multiple agents, but NOT repo-wide
 
 **Put in the PROMPT when:**
 - Knowledge is core identity (always needed)
 - Knowledge is short (<20 lines)
 - Knowledge is specific to this agent only
-</skill_vs_prompt>
+</knowledge_routing>

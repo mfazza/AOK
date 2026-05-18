@@ -50,7 +50,7 @@ If the user selects the freeform option, ask ONE follow-up to clarify, then cont
 
 <process>
 
-## Step 0: Route — Agent vs Tool vs Skill
+## Step 0: Route — Agent vs Tool vs Skill vs Global Context
 
 **Before creating an agent, determine if the user actually needs one.**
 
@@ -61,25 +61,26 @@ Analyze `$ARGUMENTS` (or the initial description) against these criteria:
 | "always does X the same way" | **Tool** | Deterministic = code, not LLM |
 | "parse/extract/validate/format" | **Tool** | Data transformation = code |
 | "run this command/script" | **Tool** | CLI wrapper = code |
+| "remember that we always..." | **Global Context** | Repo-wide convention = root file |
+| "best practices for the repo" | **Global Context** | Universal rules = root file |
 | "document how to do X" | **Skill** | Procedural knowledge = docs |
 | "follow these steps when..." | **Skill** | Conditional procedure = docs |
-| "remember that we always..." | **Skill** | Team convention = docs |
 | "decide/judge/analyze/review" | **Agent** | Judgment calls = LLM |
 | "coordinate/orchestrate/manage" | **Agent** | Multi-step reasoning = LLM |
 | "create/generate/write" | **Agent** | Creative output = LLM |
 
 ### If it's clearly a Tool:
 
-```
+```json
 question([{
-  header: "💡 Routing Recommendation",
-  question: "What you're describing sounds like a tool (deterministic code), not an agent. Tools are faster, cheaper, and more reliable for this. How should I proceed?",
-  multiSelect: false,
-  options: [
-    { label: "Create it as a tool (Recommended)", description: "Deterministic TypeScript tool — no LLM needed, always consistent" },
-    { label: "Create it as a tool + agent wrapper", description: "Tool for the logic, thin agent that invokes it with context" },
-    { label: "I still want a full agent", description: "I'll explain why it needs LLM judgment" },
-    { label: "Something else (I'll describe)", description: "Tell me what you have in mind" }
+  "header": "💡 Routing Recommendation",
+  "question": "What you're describing sounds like a tool (deterministic code), not an agent. Tools are faster, cheaper, and more reliable for this. How should I proceed?",
+  "multiSelect": false,
+  "options": [
+    { "label": "Create it as a tool (Recommended)", "description": "Deterministic TypeScript tool — no LLM needed, always consistent" },
+    { "label": "Create it as a tool + agent wrapper", "description": "Tool for the logic, thin agent that invokes it with context" },
+    { "label": "I still want a full agent", "description": "I'll explain why it needs LLM judgment" },
+    { "label": "Something else (I'll describe)", "description": "Tell me what you have in mind" }
   ]
 }])
 ```
@@ -88,21 +89,38 @@ If the user confirms "tool", run `/aok-tools` instead (pass the context forward)
 
 ### If it's clearly a Skill:
 
-```
+```json
 question([{
-  header: "💡 Routing Recommendation",
-  question: "What you're describing sounds like procedural knowledge — a skill that agents can load when needed. Skills are lighter than agents and can be shared across multiple agents.",
-  multiSelect: false,
-  options: [
-    { label: "Create it as a skill (Recommended)", description: "SKILL.md with procedural knowledge — loadable by any agent" },
-    { label: "Create a skill + dedicated agent", description: "Skill for the knowledge, agent that applies it to tasks" },
-    { label: "I still want a full agent", description: "I'll explain why it needs its own identity" },
-    { label: "Something else (I'll describe)", description: "Tell me what you have in mind" }
+  "header": "💡 Routing Recommendation",
+  "question": "What you're describing sounds like procedural knowledge — a skill that agents can load when needed. Skills are for conditional, on-demand workflows.",
+  "multiSelect": false,
+  "options": [
+    { "label": "Create it as a skill (Recommended)", "description": "SKILL.md with procedural knowledge — loadable by any agent" },
+    { "label": "Create a skill + dedicated agent", "description": "Skill for the knowledge, agent that applies it to tasks" },
+    { "label": "I still want a full agent", "description": "I'll explain why it needs its own identity" },
+    { "label": "Something else (I'll describe)", "description": "Tell me what you have in mind" }
   ]
 }])
 ```
 
 If the user confirms "skill", run `/aok-skill` instead (pass the context forward).
+
+### If it's clearly Global Context:
+
+```json
+question([{
+  "header": "💡 Routing Recommendation",
+  "question": "What you're describing sounds like global repo context (e.g., universal best practices or tech stack rules), not a specific agent or skill.",
+  "multiSelect": false,
+  "options": [
+    { "label": "Add to root context file (Recommended)", "description": "Write these rules to a root GEMINI.md or AGENTS.md file" },
+    { "label": "I still want a skill/agent", "description": "I'll explain why this shouldn't be global" },
+    { "label": "Something else (I'll describe)", "description": "Tell me what you have in mind" }
+  ]
+}])
+```
+
+If the user confirms "global context", help them edit their `AGENTS.md` or `GEMINI.md` file directly instead of continuing this workflow.
 
 ### If it needs an agent → continue to Step 1
 
@@ -521,15 +539,20 @@ Present the final report with tables:
 - The "right answer" varies by context
 </tool_decision_framework>
 
-<skill_decision_framework>
-**Create a skill when:**
-- There's a multi-step process the agent needs to follow
+<knowledge_routing>
+**Put in Global Context (AGENTS.md / GEMINI.md) when:**
+- The rule applies repo-wide
+- It dictates universal best practices or tech stack choices
+- Every agent and developer needs to know it implicitly
+
+**Create a SKILL when:**
+- There's a multi-step process the agent needs to follow conditionally
 - Domain knowledge is needed that's too long for the prompt
 - Reference material exists that should be loaded on-demand
-- The knowledge applies to multiple agents or contexts
+- The knowledge applies to multiple agents or contexts but isn't repo-wide
 
-**Keep in the prompt when:**
+**Keep in the PROMPT when:**
 - The knowledge is short (< 20 lines)
 - It's core to the agent's identity (always needed, never optional)
 - It's simple enough to state directly
-</skill_decision_framework>
+</knowledge_routing>

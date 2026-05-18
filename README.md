@@ -6,8 +6,9 @@ A metaprompting framework for creating AI agents in [opencode](https://opencode.
 
 1. **Agents are prompts.** The quality of an agent is the quality of its instructions.
 2. **Tools add determinism.** Wherever possible, replace LLM judgment with deterministic tool calls.
-3. **Skills encode knowledge.** Procedural knowledge becomes a skill the agent can load on-demand.
-4. **Evals are not optional.** Every agent ships with an eval suite that proves it works.
+3. **Skills encode conditional knowledge.** Procedural knowledge becomes a skill the agent can load on-demand, keeping the main prompt lean.
+4. **Global Context is for universal rules.** Best practices and repo-wide conventions belong in `AGENTS.md` or `GEMINI.md`, not in individual agents or skills.
+5. **Evals are not optional.** Every agent ships with an eval suite that proves it works.
 
 ## Quick Start
 
