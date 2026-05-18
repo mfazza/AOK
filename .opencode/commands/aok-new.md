@@ -51,16 +51,13 @@ UX Rules:
 
 ## Step 1: The Narrative Brain-Dump
 
-If `$ARGUMENTS` is empty, use the `ask_user` tool to capture the agent's description in a text box:
+If `$ARGUMENTS` is empty, you MUST IMMEDIATELY invoke the `ask_user` tool (using your native tool-calling capabilities, NOT by outputting a markdown block) to capture the agent's description in a text box.
+**CRITICAL:** DO NOT output any conversational text, preambles, or instructions like "Please paste the agent narrative now." Call the tool silently.
 
-```json
-ask_user([{
-  "header": "Agent Design",
-  "type": "text",
-  "question": "Tell me about the agent you want to build. What is its name, its primary goal, and how should it achieve it?",
-  "placeholder": "e.g. I want a PR reviewer named 'code-guard' that checks for security leaks..."
-}])
-```
+Use these parameters for the tool:
+- `header`: "Agent Design"
+- `type`: "text"
+- `question`: "Tell me about the agent you want to build. What is its name, its primary goal, and how should it achieve it?"
 
 Wait for the user's description.
 
