@@ -21,6 +21,8 @@ Works on ANY agent — AOK-created or not. Produces actionable findings with fix
 
 <questioning_format>
 ALL user interactions use `question()` selector format.
+- ONLY output the `question([{...}])` block. DO NOT prepend or append text.
+- Ensure strict JSON validity. The `options` property MUST be an array enclosed in `[` and `]`.
 - Options are navigable with arrow keys (↑↓) and selected with Return
 - Recommended choice is first, marked "(Recommended)"
 - Last option is always a freeform escape hatch

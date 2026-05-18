@@ -20,6 +20,8 @@ Read these before generating:
 **ALL questions to the user MUST use the `question()` selector format.**
 
 UX Rules:
+- ONLY output the `question([{...}])` block when asking a question. DO NOT prepend conversational text.
+- Ensure the JSON inside `question()` is STRICTLY valid. The `options` property MUST be a valid JSON array enclosed in `[` and `]`.
 - Users navigate options with **arrow keys** (↑↓) and confirm with **Return**
 - Ask **ONE question at a time** — fully resolve each before moving to the next
 - Options should be OPINIONATED — put the recommended choice first with "(Recommended)"
@@ -30,15 +32,15 @@ UX Rules:
 - When there are many decisions, present them sequentially (one selector per decision)
 
 Example:
-```
+```json
 question([{
-  header: "Agent Mode",
-  question: "How should this agent be used?",
-  multiSelect: false,
-  options: [
-    { label: "Subagent (Recommended)", description: "Invoked by other agents or via @mention — focused, scoped task" },
-    { label: "Primary agent", description: "Main assistant you interact with directly — replaces Build/Plan" },
-    { label: "Something else (I'll describe)", description: "Tell me what you have in mind" }
+  "header": "Agent Mode",
+  "question": "How should this agent be used?",
+  "multiSelect": false,
+  "options": [
+    { "label": "Subagent (Recommended)", "description": "Invoked by other agents or via @mention — focused, scoped task" },
+    { "label": "Primary agent", "description": "Main assistant you interact with directly — replaces Build/Plan" },
+    { "label": "Something else (I'll describe)", "description": "Tell me what you have in mind" }
   ]
 }])
 ```
