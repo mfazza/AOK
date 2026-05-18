@@ -8,15 +8,33 @@ Safely delete an AOK agent. This workflow identifies all associated artifacts �
 </purpose>
 
 <questioning_format>
-**ALL questions to the user MUST use the `question()` selector format.**
+**CRITICAL: ALL questions to the user MUST use the exact `question()` selector format.**
+**NEVER output a numbered list of questions as plain text.**
 
 UX Rules:
 - ONLY output the `question([{...}])` block when asking a question. DO NOT prepend conversational text.
 - Ensure the JSON inside `question()` is STRICTLY valid.
-- Users navigate options with arrow keys and confirm with Return.
-- Ask ONE question at a time.
-- Options should be OPINIONATED.
-- The LAST option is ALWAYS a freeform escape hatch.
+- Users navigate options with **arrow keys** (↑↓) and confirm with **Return**.
+- Ask **ONE question at a time** — fully resolve each before moving to the next.
+- Options should be OPINIONATED — put the recommended choice first with "(Recommended)".
+- The LAST option is ALWAYS a freeform escape hatch: "Something else (I'll describe)".
+- NEVER ask open-ended questions as plain text — always provide curated options.
+
+**MANDATORY JSON TEMPLATE:**
+When generating a question, you MUST copy this exact structure, including all array brackets `[` and `]`:
+```json
+question([{
+  "header": "Short Title",
+  "question": "The question text?",
+  "multiple": false,
+  "options": [
+    { "label": "Option 1", "description": "Details" },
+    { "label": "Option 2", "description": "Details" },
+    { "label": "Something else (I'll describe)", "description": "Escape hatch" }
+  ]
+}])
+```
+**FATAL ERROR:** Do NOT drop the `[` and `]` brackets around the `options` property. It must always be an array.
 </questioning_format>
 
 <process>

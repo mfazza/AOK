@@ -8,32 +8,33 @@ Install the AOK framework into the user's opencode setup. Always asks whether to
 </purpose>
 
 <questioning_format>
-**CRITICAL: ALL questions to the user MUST use the exact `question()` selector format provided in the steps.**
+**CRITICAL: ALL questions to the user MUST use the exact `question()` selector format.**
 **NEVER output a numbered list of questions as plain text.**
 
 UX Rules:
 - ONLY output the `question([{...}])` block when asking a question. DO NOT prepend conversational text.
-- Ensure the JSON inside `question()` is STRICTLY valid. **CRITICAL:** The `options` property MUST be a valid JSON array enclosed in `[` and `]`. Do not drop the array brackets!
-- Users navigate options with **arrow keys** (↑↓) and confirm with **Return**. If `multiSelect` is true, they select/deselect with **Space** and confirm with **Return**.
-- Ask **ONE question at a time** — fully resolve each before moving to the next
-- Options should be OPINIONATED — put the recommended choice first with "(Recommended)"
-- The LAST option is ALWAYS a freeform escape hatch: "Something else (I'll describe)"
-- Each option has a `label` and a `description` explaining the tradeoff
-- NEVER ask open-ended questions as plain text — always provide curated options
+- Ensure the JSON inside `question()` is STRICTLY valid.
+- Users navigate options with **arrow keys** (↑↓) and confirm with **Return**.
+- Ask **ONE question at a time** — fully resolve each before moving to the next.
+- Options should be OPINIONATED — put the recommended choice first with "(Recommended)".
+- The LAST option is ALWAYS a freeform escape hatch: "Something else (I'll describe)".
+- NEVER ask open-ended questions as plain text — always provide curated options.
 
-Example:
+**MANDATORY JSON TEMPLATE:**
+When generating a question, you MUST copy this exact structure, including all array brackets `[` and `]`:
 ```json
 question([{
-  "header": "Agent Mode",
-  "question": "How should this agent be used?",
+  "header": "Short Title",
+  "question": "The question text?",
   "multiple": false,
   "options": [
-    { "label": "Subagent (Recommended)", "description": "Invoked by other agents or via @mention — focused, scoped task" },
-    { "label": "Primary agent", "description": "Main assistant you interact with directly — replaces Build/Plan" },
-    { "label": "Something else (I'll describe)", "description": "Tell me what you have in mind" }
+    { "label": "Option 1", "description": "Details" },
+    { "label": "Option 2", "description": "Details" },
+    { "label": "Something else (I'll describe)", "description": "Escape hatch" }
   ]
 }])
 ```
+**FATAL ERROR:** Do NOT drop the `[` and `]` brackets around the `options` property. It must always be an array.
 </questioning_format>
 
 <process>

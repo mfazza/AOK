@@ -81,10 +81,22 @@ Use these parameters for the tool:
 Wait for the user's response.
 
 ### If the user selects "Help me figure it out":
-Invoke the `ask_user` tool with `type: "text"` sequentially to ask 3 guiding questions ONE AT A TIME.
-1. `question`: "What is the primary goal or purpose of this agent?" (`header`: "Goal")
-2. `question`: "What kind of inputs will it receive, and what should the final output look like?" (`header`: "I/O")
-3. `question`: "Are there any specific rules, constraints, or tools it must use?" (`header`: "Constraints")
+Invoke the `ask_user` tool sequentially to ask 3 guiding questions ONE AT A TIME.
+1. Use `type: "choice"`:
+   - `header`: "Goal"
+   - `question`: "What is the primary goal or purpose of this agent?"
+   - `options`:
+     - `label`: "Operator", `description`: "Performs tasks and interacts with external systems via CLI/tools"
+     - `label`: "Code Reviewer", `description`: "Analyzes code for bugs, security, quality"
+     - `label`: "Task Automator", `description`: "Executes repeatable workflows (deploy, release, test)"
+     - `label`: "Knowledge Assistant", `description`: "Answers questions using domain expertise"
+     - `label`: "Orchestrator", `description`: "Coordinates multiple agents/steps in a pipeline"
+2. Use `type: "text"`:
+   - `header`: "I/O"
+   - `question`: "What kind of inputs will it receive, and what should the final output look like?"
+3. Use `type: "text"`:
+   - `header`: "Constraints"
+   - `question`: "Are there any specific rules, constraints, or tools it must use?"
 
 Combine the answers into a single narrative and use it as the user's description for Step 2.
 
