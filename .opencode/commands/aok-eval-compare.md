@@ -86,11 +86,11 @@ question([{
   "question": "Which models do you want to compare?",
   "multiple": true,
   "options": [
-    { "label": "claude-sonnet-4-20250514 (Recommended)", "description": "Best balance of quality and speed for most agents" },
-    { "label": "claude-opus-4-20250514", "description": "Highest quality — slower and more expensive" },
-    { "label": "gpt-4.1", "description": "OpenAI's latest — good at structured output" },
-    { "label": "claude-haiku-3.5", "description": "Fast and cheap — test if the agent works with a lighter model" },
-    { "label": "gpt-4o-mini", "description": "OpenAI's budget model — cheapest option" },
+    { "label": "anthropic/claude-3-5-sonnet-20241022 (Recommended)", "description": "Anthropic: Best balance of quality and speed" },
+    { "label": "openai/gpt-4o", "description": "OpenAI: Flagship model, great at strict formatting" },
+    { "label": "google/gemini-2.5-pro", "description": "Google: Excellent reasoning and large context" },
+    { "label": "anthropic/claude-3-5-haiku-20241022", "description": "Anthropic: Fast and cost-effective" },
+    { "label": "openai/gpt-4o-mini", "description": "OpenAI: Budget model for simple tasks" },
     { "label": "Something else (I'll specify)", "description": "Enter model IDs manually" }
   ]
 }])
