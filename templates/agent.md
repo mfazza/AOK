@@ -35,9 +35,21 @@ You receive:
 Produce:
 {OUTPUT_DESCRIPTION}
 
+```json
+{
+  "summary": "...",
+  "findings": [
+    {
+      "id": "...",
+      "description": "..."
+    }
+  ],
+  "metadata": {
+    "confidence": 0.9
+  }
+}
 ```
-{OUTPUT_TEMPLATE}
-```
+*(Ensure all lists are wrapped in `[]` even for single items)*
 </output_format>
 
 <guardrails>

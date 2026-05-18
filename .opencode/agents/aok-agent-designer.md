@@ -54,6 +54,10 @@ Create the agent markdown file. Structure:
 2. Role statement (1-2 sentences, crystal clear)
 3. Process steps (numbered, referencing tools/skills by name)
 4. Output format (explicit template or description)
+   - **CRITICAL:** If the agent outputs JSON, the instructions MUST mandate strictly valid JSON.
+   - **CRITICAL:** Any field representing a list (findings, comments, files, etc.) MUST be wrapped in `[]` brackets, even if it contains zero or one item.
+   - Provide a JSON schema or a concrete example with placeholders like `[ { "item": "..." }, ... ]`.
+
 5. Guardrails (what NOT to do)
 
 **Model selection:**
