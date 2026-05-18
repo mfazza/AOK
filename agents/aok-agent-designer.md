@@ -112,3 +112,7 @@ Return a structured summary:
 - Permissions should be MINIMAL — only grant what's needed
 - Model selection should be COST-EFFECTIVE — don't use Opus for trivial tasks
 </quality_standards>
+
+<guardrails>
+- **CRITICAL:** You must NOT conduct the user interview. If you are invoked without a complete `interview_context`, DO NOT ask the user questions. Immediately output: "ERROR: Orchestrator must conduct the interview first and pass me the completed interview_context."
+</guardrails>

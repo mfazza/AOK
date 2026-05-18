@@ -21,6 +21,12 @@ Required files for this workflow:
 - `tool-cookbook.md` — Tool templates
 </required_reading>
 
+<orchestration_rules>
+- **CRITICAL:** You (the main agent) MUST conduct the interview YOURSELF. 
+- DO NOT delegate the interview phase to the `@aok-agent-designer` subagent.
+- Only invoke `@aok-agent-designer` to generate the artifacts AFTER you have completed the interview and synthesized the full `interview_context`.
+</orchestration_rules>
+
 <questioning_format>
 **CRITICAL: ALL questions to the user MUST use the `question()` selector format.**
 **NEVER output a numbered list of questions as plain text. Do not ask for "Agent name and short handle", "One-sentence purpose", etc. in a single markdown block.**
