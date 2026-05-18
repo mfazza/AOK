@@ -31,12 +31,16 @@ else
   echo "  1) Project-local (.opencode/ in this repo) — recommended"
   echo "  2) Global (~/.config/opencode/ — available everywhere)"
   echo "  3) Both (global + project-local, project takes precedence)"
+  echo "  4) Restore defaults (Local)"
+  echo "  5) Restore defaults (Global)"
   echo ""
-  read -p "Select [1/2/3]: " choice
+  read -p "Select [1/2/3/4/5]: " choice
   case "$choice" in
     1) MODE="local" ;;
     2) MODE="global" ;;
     3) MODE="both" ;;
+    4) MODE="local" ;;
+    5) MODE="global" ;;
     *) echo "Invalid choice. Exiting."; exit 1 ;;
   esac
 fi

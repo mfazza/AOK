@@ -44,11 +44,13 @@ question([{
 ```json
 question([{
   "header": "Installation",
-  "question": "Where should AOK be installed?",
+  "question": "Where should AOK be installed (or restored)?",
   "options": [
     { "label": "Project-local (Recommended)", "description": "Installs to .opencode/ in the current project. Commands available only in this repo." },
     { "label": "Global", "description": "Installs to ~/.config/opencode/. Commands available in all projects." },
     { "label": "Both", "description": "Install globally AND to the current project (project copy takes precedence)." },
+    { "label": "Restore defaults (Local)", "description": "Overwrite existing project-local AOK installation with pristine defaults." },
+    { "label": "Restore defaults (Global)", "description": "Overwrite existing global AOK installation with pristine defaults." },
     { "label": "Something else (I'll explain)", "description": "Custom installation target" }
   ]
 }])
@@ -60,11 +62,13 @@ question([{
 
 Based on selection:
 
-- **Project-local**: Find project root via `git rev-parse --show-toplevel` or use current directory. Target = `{root}/.opencode/`
-- **Global**: Target = `~/.config/opencode/`
+- **Project-local** or **Restore defaults (Local)**: Find project root via `git rev-parse --show-toplevel` or use current directory. Target = `{root}/.opencode/`
+- **Global** or **Restore defaults (Global)**: Target = `~/.config/opencode/`
 - **Both**: Run installation twice — first global, then project-local
 
-If project-local and a `.opencode/` directory already exists with AOK commands:
+If the user selected "Restore defaults (Local)" or "Restore defaults (Global)", automatically assume "Overwrite" and skip the prompt below.
+
+Otherwise, if project-local and a `.opencode/` directory already exists with AOK commands:
 ```json
 question([{
   "header": "Existing Installation",
