@@ -219,13 +219,14 @@ question([{
 ```json
 question([{
   "header": "Knowledge",
-  "question": "Does this agent need specialized knowledge it should load on-demand?",
+  "question": "What kind of specialized knowledge does this agent need to reference?",
   "multiSelect": true,
   "options": [
-    { "label": "Domain conventions", "description": "Coding standards, naming rules, format rules → skill" },
-    { "label": "Process documentation", "description": "Multi-step procedures, decision trees → skill" },
-    { "label": "Reference tables", "description": "Lookup data, API docs, schema refs → skill" },
-    { "label": "None needed", "description": "Core prompt is sufficient" },
+    { "label": "Procedural (new skill)", "description": "Step-by-step procedures or decision trees → creates a SKILL" },
+    { "label": "Domain conventions (new skill)", "description": "Specific naming rules or format rules → creates a SKILL" },
+    { "label": "Global rules (repo-level)", "description": "Universal rules via AGENTS.md or opencode/rules/" },
+    { "label": "Existing reference docs", "description": "Link to documentation already available in the workspace" },
+    { "label": "None needed", "description": "Core behavioral prompt is sufficient" },
     { "label": "Something else (I'll describe)", "description": "Tell me what you have in mind" }
   ]
 }])
