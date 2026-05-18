@@ -300,9 +300,9 @@ description: {description from interview}
 mode: {primary | subagent}
 model: {appropriate model}
 temperature: {0.1 for deterministic tasks, 0.3 for creative}
-permission:
-  edit: {allow | ask | deny based on agent needs}
-  bash: {allow | ask | deny based on agent needs}
+permissions:
+  edit: {allow | ask | deny}
+  bash: {allow | ask | deny}
 ---
 
 {System prompt derived from interview}
@@ -325,7 +325,8 @@ import { tool } from "@opencode-ai/plugin"
 export default tool({
   "description": "{what this tool does}",
   args: {
-    // Typed arguments with descriptions
+    // Use JSON Schema: { type: "string", description: "..." }
+    // For arrays: { type: "array", items: { type: "string" }, description: "..." }
   },
   async execute(args, context) {
     // Deterministic implementation
