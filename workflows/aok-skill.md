@@ -200,13 +200,13 @@ The agent can now load this skill on-demand when {trigger condition}.
 - Every agent and developer needs to know it implicitly
 
 **Put in the SKILL when:**
-- Knowledge is >20 lines
+- Knowledge is procedural (how-to) rather than behavioral (who I am)
 - Knowledge is only needed *conditionally* (on-demand)
-- Knowledge has reference tables or decision trees
+- Knowledge consists of reference tables, API schemas, or decision trees
 - Knowledge applies to multiple agents, but NOT repo-wide
 
 **Put in the PROMPT when:**
-- Knowledge is core identity (always needed)
-- Knowledge is short (<20 lines)
+- Knowledge describes core identity and behavioral rules (always needed)
+- Knowledge defines how the agent thinks or acts on every invocation
 - Knowledge is specific to this agent only
 </knowledge_routing>

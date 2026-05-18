@@ -563,12 +563,12 @@ Present the final report with tables:
 
 **Create a SKILL when:**
 - There's a multi-step process the agent needs to follow conditionally
-- Domain knowledge is needed that's too long for the prompt
-- Reference material exists that should be loaded on-demand
+- Explicit heuristics, decision trees, or troubleshooting steps are needed conditionally
+- There are reference tables, API schemas, or lookup data that should only be fetched on-demand (never core behavior)
 - The knowledge applies to multiple agents or contexts but isn't repo-wide
 
 **Keep in the PROMPT when:**
-- The knowledge is short (< 20 lines)
-- It's core to the agent's identity (always needed, never optional)
-- It's simple enough to state directly
+- The instructions describe core identity and behavioral rules (always needed)
+- The instructions define *how* the agent thinks or acts on every invocation
+- The knowledge is concise and essential for its baseline task
 </knowledge_routing>
