@@ -156,6 +156,7 @@ question([{
     { "label": "Code reviewer", "description": "Analyzes code for bugs, security, quality" },
     { "label": "Task automator", "description": "Executes repeatable workflows (deploy, release, test)" },
     { "label": "Knowledge assistant", "description": "Answers questions using domain expertise" },
+    { "label": "Operator", "description": "Interacts with external systems (Jira, GitHub) via tools/MCP" },
     { "label": "Orchestrator", "description": "Coordinates multiple agents/steps in a pipeline" },
     { "label": "Something else (I'll describe)", "description": "Tell me what you have in mind" }
   ]
