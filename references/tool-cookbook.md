@@ -4,7 +4,28 @@
 
 ---
 
-## Setup
+## Tool Types: Local vs. MCP
+
+Opencode supports two primary ways to add tools to your agents:
+
+1. **Local TypeScript Tools (`.opencode/tools/*.ts`)**: Best for fast, repository-specific parsing, formatting, or local file transformations.
+2. **MCP (Model Context Protocol) Servers**: Best for external API integrations, databases, and heavy external dependencies.
+
+**Best Practice:** Prefer adding existing MCP servers (e.g., Jira, GitHub, Postgres) via your global `opencode.json` rather than building custom API wrappers in local TypeScript.
+
+---
+
+## Best Practice: Token Optimization
+
+When building tools that fetch data (like file readers, searches, or API calls), **never return massive, unpaginated JSON**. Agents have context limits (often ~25,000 tokens for tool responses).
+
+*   **Summarize**: Instead of returning a full database schema, return just the table names unless a specific table is requested.
+*   **Truncate**: If a file is over 1000 lines, return the first 500 lines and a message saying `[Truncated. Use pagination args to see more.]`
+*   **Paginate**: Always include `limit` and `cursor`/`offset` arguments for search tools.
+
+---
+
+## Setup for Local Tools
 
 Tools require `@opencode-ai/plugin`. In your `.opencode/` directory:
 

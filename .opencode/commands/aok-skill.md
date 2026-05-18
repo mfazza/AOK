@@ -91,6 +91,18 @@ question([{
 }])
 ```
 
+```json
+question([{
+  "header": "Scripts & Hooks",
+  "question": "Does this skill require executable scripts (e.g., bash/node scripts or pre/post hooks)?",
+  "multiSelect": false,
+  "options": [
+    { "label": "No (Recommended)", "description": "Just procedural documentation and references" },
+    { "label": "Yes", "description": "I need a scripts/ directory for executable logic" }
+  ]
+}])
+```
+
 ## Step 3: Design the Skill
 
 Present the design:
@@ -144,6 +156,10 @@ metadata:
 - Use tables, decision trees, or lookup formats
 - Skill body should explain HOW to use the references
 
+**If executable scripts/hooks are needed**, create them in `.opencode/skills/{skill-name}/scripts/`:
+- Create empty shell scripts or node wrappers based on the user's need.
+- Update the `SKILL.md` to explicitly tell the agent how and when to invoke these scripts via bash.
+
 ## Step 5: Update Agent Prompt
 
 Edit `.opencode/agents/{agent-name}.md` to mention the skill:
@@ -158,6 +174,7 @@ Edit `.opencode/agents/{agent-name}.md` to mention the skill:
 **Files:**
 - `.opencode/skills/{skill-name}/SKILL.md`
 - `.opencode/skills/{skill-name}/references/` (if any)
+- `.opencode/skills/{skill-name}/scripts/` (if any)
 
 **Loaded when:** {trigger description}
 **Agent updated:** `.opencode/agents/{agent-name}.md`

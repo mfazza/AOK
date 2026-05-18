@@ -46,6 +46,22 @@ question([{
 ```
 
 If the user selects the freeform option, ask ONE follow-up to clarify, then continue.
+
+If the user selects "Orchestrator", ask a follow-up question to define its subagents:
+```json
+question([{
+  "header": "Context Firewalls",
+  "question": "Orchestrators use specialized subagents as 'context firewalls' to delegate reading and keep their own context clean. What subagents does this orchestrator need?",
+  "multiSelect": true,
+  "options": [
+    { "label": "Security Reviewer", "description": "Reads code and returns security findings only" },
+    { "label": "Performance Reviewer", "description": "Reads code and returns performance findings only" },
+    { "label": "Codebase Mapper", "description": "Explores the repo and returns an architectural summary" },
+    { "label": "Something else (I'll describe)", "description": "Custom specialized subagents" }
+  ]
+}])
+```
+*(If the user selects subagents, you will iterate Step 3 and Step 4 to scaffold both the Orchestrator AND its Subagents).*
 </questioning_format>
 
 <process>

@@ -82,9 +82,9 @@ skills/perf-review/SKILL.md          ← performance patterns knowledge
 
 ---
 
-## Pattern 5: Orchestrator + Specialists
+## Pattern 5: Orchestrator + Specialists (Context Firewalls)
 
-**When:** Different parts of the task need different expertise.
+**When:** Different parts of the task need different expertise, or the context window would overflow if one agent did everything.
 
 ```
 agents/review-orchestrator.md        ← routes to specialists
@@ -93,9 +93,10 @@ agents/review-performance.md         ← perf specialist (subagent)
 agents/review-architecture.md        ← arch specialist (subagent)
 ```
 
-- Orchestrator decides what to do and delegates
-- Specialists are focused subagents
-- Eval: Routing correctness + individual specialist quality
+- **Context Firewalling:** The orchestrator delegates heavy reading to the specialists. The specialists read the code, but only return a *dense summary* back to the orchestrator. This keeps the orchestrator's context lean and focused.
+- Orchestrator decides what to do and delegates.
+- Specialists are focused subagents with restricted tools.
+- Eval: Routing correctness + individual specialist quality + final summarization.
 
 ---
 
@@ -161,14 +162,16 @@ tool({
 - Rapidly changing information (will be stale)
 - Agent-specific identity (that's the prompt's job)
 
-### Skill Loading Triggers
-Good descriptions that help the agent know WHEN to load:
+### Skill Loading Triggers (Progressive Disclosure)
+The agent router reads the `description` field in the YAML frontmatter *first*. It only loads the full `SKILL.md` body if that description matches the current task. **This is called Progressive Disclosure.**
+
+To make it work, write descriptions as explicit trigger conditions:
 
 ```yaml
-# GOOD — specific trigger
-description: "Guidelines for writing GraphQL resolvers with N+1 prevention"
+# GOOD — specific trigger condition
+description: "Guidelines for writing GraphQL resolvers. Use this whenever the user asks to create or modify a GraphQL endpoint to prevent N+1 queries."
 
-# BAD — vague
+# BAD — vague, agent won't know when to use it
 description: "Help with code"
 ```
 
