@@ -198,18 +198,18 @@ question([{
 }])
 ```
 
-**Question 3: Reliability Needs**
+**Question 3: Determinism & Tools**
 ```json
 question([{
   "header": "Determinism",
-  "question": "Are there steps that MUST work the same way every time?",
+  "question": "Which parts of this workflow should use strict code (Tools) instead of LLM judgment?",
   "multiSelect": true,
   "options": [
-    { "label": "Input validation", "description": "Check inputs before processing → becomes a tool" },
-    { "label": "Output formatting", "description": "Always produce exact structure → becomes a tool" },
-    { "label": "Data parsing", "description": "Extract info from files/APIs → becomes a tool" },
-    { "label": "External calls", "description": "Always query specific systems → becomes a tool" },
-    { "label": "None needed", "description": "LLM judgment is fine for all steps" },
+    { "label": "{Specific recommendation based on context}", "description": "Recommended because {brief technical reason}." },
+    { "label": "Input validation", "description": "Verify schemas, existence of files, or credentials" },
+    { "label": "Data transformation", "description": "Parse raw text or format structured outputs (JSON/YAML)" },
+    { "label": "External system calls", "description": "Execute CLI commands, query APIs, or write to disk" },
+    { "label": "None needed", "description": "The LLM's reasoning is sufficient for all steps" },
     { "label": "Something else (I'll describe)", "description": "Tell me what you have in mind" }
   ]
 }])
