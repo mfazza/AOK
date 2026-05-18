@@ -19,8 +19,8 @@ This is the universal quality gate for agents.
 
 UX Rules:
 - ONLY output the `question([{...}])` block when asking a question. DO NOT prepend conversational text.
-- Ensure the JSON inside `question()` is STRICTLY valid. The `options` property MUST be a valid JSON array enclosed in `[` and `]`.
-- Users navigate options with **arrow keys** (↑↓) and confirm with **Return**
+- Ensure the JSON inside `question()` is STRICTLY valid. **CRITICAL:** The `options` property MUST be a valid JSON array enclosed in `[` and `]`. Do not drop the array brackets!
+- Users navigate options with **arrow keys** (↑↓) and confirm with **Return**. If `multiSelect` is true, they select/deselect with **Space** and confirm with **Return**.
 - Ask **ONE question at a time** — fully resolve each before moving to the next
 - Options should be OPINIONATED — put the recommended choice first with "(Recommended)"
 - The LAST option is ALWAYS a freeform escape hatch: "Something else (I'll describe)"
@@ -101,16 +101,16 @@ Read the agent definition at `.opencode/agents/{agent-name}.md`:
 
 Consult `references/eval-taxonomy.md` to select eval types:
 
-```
+```json
 question([{
-  header: "Eval Coverage",
-  question: "Based on this agent, I recommend these eval dimensions. Approve?",
-  multiSelect: false,
-  options: [
-    { label: "Use all recommended (Recommended)", description: "{list: Task Completion, Format Compliance, Tool Usage, Scope Adherence, etc.}" },
-    { label: "Minimal — just core checks", description: "Task Completion + Format + one robustness test" },
-    { label: "Comprehensive — maximum coverage", description: "All recommended + Quality + Adversarial + Integration" },
-    { label: "Something else (I'll pick)", description: "Let me choose dimensions" }
+  "header": "Eval Coverage",
+  "question": "Based on this agent, I recommend these eval dimensions. Approve?",
+  "multiSelect": false,
+  "options": [
+    { "label": "Use all recommended (Recommended)", "description": "{list: Task Completion, Format Compliance, Tool Usage, Scope Adherence, etc.}" },
+    { "label": "Minimal — just core checks", "description": "Task Completion + Format + one robustness test" },
+    { "label": "Comprehensive — maximum coverage", "description": "All recommended + Quality + Adversarial + Integration" },
+    { "label": "Something else (I'll pick)", "description": "Let me choose dimensions" }
   ]
 }])
 ```

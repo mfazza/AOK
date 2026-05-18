@@ -22,7 +22,7 @@ Read these before generating:
 UX Rules:
 - ONLY output the `question([{...}])` block when asking a question. DO NOT prepend conversational text.
 - Ensure the JSON inside `question()` is STRICTLY valid. **CRITICAL:** The `options` property MUST be a valid JSON array enclosed in `[` and `]`. Do not drop the array brackets!
-- Users navigate options with **arrow keys** (↑↓) and confirm with **Return**. If `multiSelect` is true, they select/deselect with **Space** and confirm with **Return**.
+- Users navigate options with **arrow keys** (↑↓) and confirm with **Return**. If `multiSelect` is true, they select/deselect with **Space** and confirm with **Return**.. If `multiSelect` is true, they select/deselect with **Space** and confirm with **Return**.
 - Ask **ONE question at a time** — fully resolve each before moving to the next
 - Options should be OPINIONATED — put the recommended choice first with "(Recommended)"
 - The LAST option is ALWAYS a freeform escape hatch: "Something else (I'll describe)"

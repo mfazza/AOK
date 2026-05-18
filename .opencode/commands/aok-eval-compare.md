@@ -4,7 +4,7 @@ agent: build
 ---
 
 <purpose>
-Run the same eval suite for an agent across multiple LLM models and produce a side-by-side comparison table. This answers the question: "Which model is best for this agent?" and reveals model-specific weaknesses.
+Run the same eval suite for an agent across multiple LLM models and produce a side-by-side comparison table. This answers the "question": "Which model is best for this agent?" and reveals model-specific weaknesses.
 
 Works with any agent — AOK-created or not.
 </purpose>
@@ -19,8 +19,8 @@ Works with any agent — AOK-created or not.
 
 UX Rules:
 - ONLY output the `question([{...}])` block when asking a question. DO NOT prepend conversational text.
-- Ensure the JSON inside `question()` is STRICTLY valid. The `options` property MUST be a valid JSON array enclosed in `[` and `]`.
-- Users navigate options with **arrow keys** (↑↓) and confirm with **Return**
+- Ensure the JSON inside `question()` is STRICTLY valid. **CRITICAL:** The `options` property MUST be a valid JSON array enclosed in `[` and `]`. Do not drop the array brackets!
+- Users navigate options with **arrow keys** (↑↓) and confirm with **Return**. If `multiSelect` is true, they select/deselect with **Space** and confirm with **Return**.
 - Ask **ONE question at a time** — fully resolve each before moving to the next
 - Options should be OPINIONATED — put the recommended choice first with "(Recommended)"
 - The LAST option is ALWAYS a freeform escape hatch: "Something else (I'll describe)"
@@ -49,15 +49,15 @@ question([{
 
 Parse `$ARGUMENTS` for the agent name. If empty, prompt:
 
-```
+```json
 question([{
-  header: "Target Agent",
-  question: "Which agent do you want to compare across models?",
-  multiSelect: false,
-  options: [
-    { label: "{agent-1}", description: "{description}" },
-    { label: "{agent-2}", description: "{description}" },
-    { label: "Something else (I'll tell you)", description: "An agent not listed" }
+  "header": "Target Agent",
+  "question": "Which agent do you want to compare across models?",
+  "multiSelect": false,
+  "options": [
+    { "label": "{agent-1}", "description": "{description}" },
+    { "label": "{agent-2}", "description": "{description}" },
+    { "label": "Something else (I'll tell you)", "description": "An agent not listed" }
   ]
 }])
 ```
@@ -74,18 +74,18 @@ Then execute the aok-eval flow (Step 3 from that workflow) to scaffold evals bef
 
 ## Step 3: Select Models to Compare
 
-```
+```json
 question([{
-  header: "Model Selection",
-  question: "Which models do you want to compare?",
-  multiSelect: true,
-  options: [
-    { label: "claude-sonnet-4-20250514 (Recommended)", description: "Best balance of quality and speed for most agents" },
-    { label: "claude-opus-4-20250514", description: "Highest quality — slower and more expensive" },
-    { label: "gpt-4.1", description: "OpenAI's latest — good at structured output" },
-    { label: "claude-haiku-3.5", description: "Fast and cheap — test if the agent works with a lighter model" },
-    { label: "gpt-4o-mini", description: "OpenAI's budget model — cheapest option" },
-    { label: "Something else (I'll specify)", description: "Enter model IDs manually" }
+  "header": "Model Selection",
+  "question": "Which models do you want to compare?",
+  "multiSelect": true,
+  "options": [
+    { "label": "claude-sonnet-4-20250514 (Recommended)", "description": "Best balance of quality and speed for most agents" },
+    { "label": "claude-opus-4-20250514", "description": "Highest quality — slower and more expensive" },
+    { "label": "gpt-4.1", "description": "OpenAI's latest — good at structured output" },
+    { "label": "claude-haiku-3.5", "description": "Fast and cheap — test if the agent works with a lighter model" },
+    { "label": "gpt-4o-mini", "description": "OpenAI's budget model — cheapest option" },
+    { "label": "Something else (I'll specify)", "description": "Enter model IDs manually" }
   ]
 }])
 ```
@@ -197,17 +197,17 @@ Include all tables and findings for historical reference.
 
 ## Step 8: Offer Next Steps
 
-```
+```json
 question([{
-  header: "Next Steps",
-  question: "What would you like to do with these results?",
-  multiSelect: false,
-  options: [
-    { label: "Switch agent to recommended model (Recommended)", description: "Update the agent's model setting to {best-model}" },
-    { label: "Iterate on failures", description: "Fix issues found across models with /aok-iterate" },
-    { label: "Run again with different models", description: "Try other models not included in this comparison" },
-    { label: "Done for now", description: "Save results and finish" },
-    { label: "Something else (I'll tell you)", description: "Tell me what you want to do" }
+  "header": "Next Steps",
+  "question": "What would you like to do with these results?",
+  "multiSelect": false,
+  "options": [
+    { "label": "Switch agent to recommended model (Recommended)", "description": "Update the agent's model setting to {best-model}" },
+    { "label": "Iterate on failures", "description": "Fix issues found across models with /aok-iterate" },
+    { "label": "Run again with different models", "description": "Try other models not included in this comparison" },
+    { "label": "Done for now", "description": "Save results and finish" },
+    { "label": "Something else (I'll tell you)", "description": "Tell me what you want to do" }
   ]
 }])
 ```

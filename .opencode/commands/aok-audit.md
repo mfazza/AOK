@@ -24,8 +24,8 @@ Works on ANY agent — AOK-created or not. Produces actionable findings with fix
 
 UX Rules:
 - ONLY output the `question([{...}])` block when asking a question. DO NOT prepend conversational text.
-- Ensure the JSON inside `question()` is STRICTLY valid. The `options` property MUST be a valid JSON array enclosed in `[` and `]`.
-- Users navigate options with **arrow keys** (↑↓) and confirm with **Return**
+- Ensure the JSON inside `question()` is STRICTLY valid. **CRITICAL:** The `options` property MUST be a valid JSON array enclosed in `[` and `]`. Do not drop the array brackets!
+- Users navigate options with **arrow keys** (↑↓) and confirm with **Return**. If `multiSelect` is true, they select/deselect with **Space** and confirm with **Return**.
 - Ask **ONE question at a time** — fully resolve each before moving to the next
 - Options should be OPINIONATED — put the recommended choice first with "(Recommended)"
 - The LAST option is ALWAYS a freeform escape hatch: "Something else (I'll describe)"
@@ -241,18 +241,18 @@ Output as structured tables:
 
 ## Step 7: Offer Fixes
 
-```
+```json
 question([{
-  header: "Apply Fixes",
-  question: "How would you like to address these findings?",
-  multiSelect: false,
-  options: [
-    { label: "Fix critical issues only (Recommended)", description: "Address injection surfaces and high-impact token waste" },
-    { label: "Fix all — create tools for determinism gaps", description: "Full refactor: new tools + prompt rewrite + guardrails" },
-    { label: "Just the injection surfaces", description: "Security hardening only — add guardrails and input boundaries" },
-    { label: "Just the determinism opportunities", description: "Create tools to replace LLM reasoning where possible" },
-    { label: "None — I just wanted the report", description: "Save audit results, no changes" },
-    { label: "Something else (I'll tell you)", description: "Custom selection of fixes" }
+  "header": "Apply Fixes",
+  "question": "How would you like to address these findings?",
+  "multiSelect": false,
+  "options": [
+    { "label": "Fix critical issues only (Recommended)", "description": "Address injection surfaces and high-impact token waste" },
+    { "label": "Fix all — create tools for determinism gaps", "description": "Full refactor: new tools + prompt rewrite + guardrails" },
+    { "label": "Just the injection surfaces", "description": "Security hardening only — add guardrails and input boundaries" },
+    { "label": "Just the determinism opportunities", "description": "Create tools to replace LLM reasoning where possible" },
+    { "label": "None — I just wanted the report", "description": "Save audit results, no changes" },
+    { "label": "Something else (I'll tell you)", "description": "Custom selection of fixes" }
   ]
 }])
 ```
