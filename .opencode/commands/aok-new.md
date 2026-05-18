@@ -1,12 +1,18 @@
 ---
-description: Create a new AI agent from scratch — interview, generate, scaffold, eval, end-to-end test
+description: Create a new AI agent using Progressive Enhancement (Narrative → Monolith → Eval → Extract)
 agent: build
 ---
 
 <purpose>
-Create a new AI agent through guided interview, then generate all artifacts: agent definition, tools, skills, command, and eval suite. Run end-to-end test before finishing. This is the primary entry point for AOK.
+Create a new AI agent using the "Progressive Enhancement" paradigm. 
 
-The workflow: understand → design → generate → scaffold evals → end-to-end test → incorporate feedback.
+Instead of guessing tools and skills upfront, the workflow is:
+1. Narrative Brain-Dump (User describes what/how)
+2. Synthesize Monolithic Baseline (Architect subagent drafts a single heavy prompt)
+3. Confirm Metadata (Interactive questions for YAML frontmatter based on recommendations)
+4. Baseline Eval (Generate evals and run them against the monolith)
+5. Architectural Analysis (Architect subagent recommends extractions based on failures)
+6. Iteration Loop (User chooses to extract tools/skills, run evals, and commit changes)
 </purpose>
 
 <required_reading>
@@ -22,175 +28,58 @@ Required files for this workflow:
 </required_reading>
 
 <orchestration_rules>
-- **CRITICAL:** You (the main agent) MUST conduct the interview YOURSELF. 
-- DO NOT delegate the interview phase to the `@aok-agent-designer` subagent.
-- Only invoke `@aok-agent-designer` to generate the artifacts AFTER you have completed the interview and synthesized the full `interview_context`.
+- **CRITICAL:** You (the main agent) MUST conduct the interactive phases YOURSELF. 
+- You will use the `@aok-architect` subagent purely for synthesis and analysis, passing it data and receiving its JSON/Markdown output. Do NOT let it talk to the user.
 </orchestration_rules>
 
 <questioning_format>
-**CRITICAL: ALL questions to the user MUST use the `question()` selector format.**
-**NEVER output a numbered list of questions as plain text. Do not ask for "Agent name and short handle", "One-sentence purpose", etc. in a single markdown block.**
+**CRITICAL: ALL questions to the user MUST use the exact `question()` selector format provided in the steps.**
+**NEVER output a numbered list of questions as plain text.**
 
 UX Rules:
 - ONLY output the `question([{...}])` block when asking a question. DO NOT prepend conversational text.
 - Ensure the JSON inside `question()` is STRICTLY valid. **CRITICAL:** The `options` property MUST be a valid JSON array enclosed in `[` and `]`. Do not drop the array brackets!
-- Users navigate options with **arrow keys** (↑↓) and confirm with **Return**. If `multiSelect` is true, they select/deselect with **Space** and confirm with **Return**.. If `multiSelect` is true, they select/deselect with **Space** and confirm with **Return**.
+- Users navigate options with **arrow keys** (↑↓) and confirm with **Return**. If `multiSelect` is true, they select/deselect with **Space** and confirm with **Return**.
 - Ask **ONE question at a time** — fully resolve each before moving to the next
 - Options should be OPINIONATED — put the recommended choice first with "(Recommended)"
 - The LAST option is ALWAYS a freeform escape hatch: "Something else (I'll describe)"
-- Keep options to 3-5 choices (plus the freeform escape)
 - Each option has a `label` and a `description` explaining the tradeoff
 - NEVER ask open-ended questions as plain text — always provide curated options
-- When there are many decisions, present them sequentially (one selector per decision)
-
-Example:
-```json
-question([{
-  "header": "Agent Mode",
-  "question": "How should this agent be used?",
-  "multiple": false,
-  "options": [
-    { "label": "Subagent (Recommended)", "description": "Invoked by other agents or via @mention — focused, scoped task" },
-    { "label": "Primary agent", "description": "Main assistant you interact with directly — replaces Build/Plan" },
-    { "label": "Something else (I'll describe)", "description": "Tell me what you have in mind" }
-  ]
-}])
-```
-
-If the user selects the freeform option, ask ONE follow-up to clarify, then continue.
-
-If the user selects "Orchestrator", ask a follow-up question to define its subagents:
-```json
-question([{
-  "header": "Context Firewalls",
-  "question": "Orchestrators use specialized subagents as 'context firewalls' to delegate reading and keep their own context clean. What subagents does this orchestrator need?",
-  "multiple": true,
-  "options": [
-    { "label": "Security Reviewer", "description": "Reads code and returns security findings only" },
-    { "label": "Performance Reviewer", "description": "Reads code and returns performance findings only" },
-    { "label": "Codebase Mapper", "description": "Explores the repo and returns an architectural summary" },
-    { "label": "Something else (I'll describe)", "description": "Custom specialized subagents" }
-  ]
-}])
-```
-*(If the user selects subagents, you will iterate Step 3 and Step 4 to scaffold both the Orchestrator AND its Subagents).*
 </questioning_format>
 
 <process>
 
-## Step 0: Route — Agent vs Tool vs Skill vs Global Context
+## Step 1: The Narrative Brain-Dump
 
-**Before creating an agent, determine if the user actually needs one.**
+If `$ARGUMENTS` is empty, ask the user for a freeform description:
+> "Tell me about the agent you want to build. What is its name, what is its primary goal, and how should it achieve it? Feel free to describe the step-by-step process or paste in existing instructions."
 
-Analyze `$ARGUMENTS` (or the initial description) against these criteria:
+Wait for the user's description.
 
-| Signal | What They Actually Need | Why |
-|--------|------------------------|-----|
-| "always does X the same way" | **Tool** | Deterministic = code, not LLM |
-| "parse/extract/validate/format" | **Tool** | Data transformation = code |
-| "run this command/script" | **Tool** | CLI wrapper = code |
-| "remember that we always..." | **Global Context** | Repo-wide convention = root file |
-| "best practices for the repo" | **Global Context** | Universal rules = root file |
-| "document how to do X" | **Skill** | Procedural knowledge = docs |
-| "follow these steps when..." | **Skill** | Conditional procedure = docs |
-| "decide/judge/analyze/review" | **Agent** | Judgment calls = LLM |
-| "coordinate/orchestrate/manage" | **Agent** | Multi-step reasoning = LLM |
-| "create/generate/write" | **Agent** | Creative output = LLM |
+## Step 2: Synthesis (Internal)
 
-### If it's clearly a Tool:
+Invoke the `@aok-architect` subagent. 
+Pass it the user's description and instruct it to use `<mode_1_synthesis>`.
 
+Wait for it to return the JSON block containing:
+- `recommended_slug`
+- `recommended_mode`
+- `recommended_permissions`
+- `monolithic_prompt`
+
+## Step 3: Confirm Metadata (Interactive)
+
+Use the architect's recommendations to populate the first options in these questions. Ask them **ONE AT A TIME**.
+
+**Question 1: Agent Handle**
 ```json
 question([{
-  "header": "💡 Routing Recommendation",
-  "question": "What you're describing sounds like a tool (deterministic code), not an agent. Tools are faster, cheaper, and more reliable for this. How should I proceed?",
+  "header": "Handle",
+  "question": "I suggest the handle `{recommended_slug}`. Look right?",
   "multiple": false,
   "options": [
-    { "label": "Create it as a tool (Recommended)", "description": "Deterministic TypeScript tool — no LLM needed, always consistent" },
-    { "label": "Create it as a tool + agent wrapper", "description": "Tool for the logic, thin agent that invokes it with context" },
-    { "label": "I still want a full agent", "description": "I'll explain why it needs LLM judgment" },
-    { "label": "Something else (I'll describe)", "description": "Tell me what you have in mind" }
-  ]
-}])
-```
-
-If the user confirms "tool", run `/aok-tools` instead (pass the context forward).
-
-### If it's clearly a Skill:
-
-```json
-question([{
-  "header": "💡 Routing Recommendation",
-  "question": "What you're describing sounds like procedural knowledge — a skill that agents can load when needed. Skills are for conditional, on-demand workflows.",
-  "multiple": false,
-  "options": [
-    { "label": "Create it as a skill (Recommended)", "description": "SKILL.md with procedural knowledge — loadable by any agent" },
-    { "label": "Create a skill + dedicated agent", "description": "Skill for the knowledge, agent that applies it to tasks" },
-    { "label": "I still want a full agent", "description": "I'll explain why it needs its own identity" },
-    { "label": "Something else (I'll describe)", "description": "Tell me what you have in mind" }
-  ]
-}])
-```
-
-If the user confirms "skill", run `/aok-skill` instead (pass the context forward).
-
-### If it's clearly Global Context:
-
-```json
-question([{
-  "header": "💡 Routing Recommendation",
-  "question": "What you're describing sounds like global repo context (e.g., universal best practices or tech stack rules), not a specific agent or skill.",
-  "multiple": false,
-  "options": [
-    { "label": "Add to root context file (Recommended)", "description": "Write these rules to a root GEMINI.md or AGENTS.md file" },
-    { "label": "I still want a skill/agent", "description": "I'll explain why this shouldn't be global" },
-    { "label": "Something else (I'll describe)", "description": "Tell me what you have in mind" }
-  ]
-}])
-```
-
-If the user confirms "global context", help them edit their `AGENTS.md` or `GEMINI.md` file directly instead of continuing this workflow.
-
-### If it needs an agent → continue to Step 1
-
-If the description clearly involves judgment, decision-making, creative output, or multi-step reasoning, proceed directly to Step 1 without the routing question.
-
-## Step 1: Understand the Agent
-
-If `$ARGUMENTS` contains a description, use it as the starting point and skip to Step 2.
-
-Otherwise:
-```json
-question([{
-  "header": "🤖 Agent Operator Kit",
-  "question": "What kind of agent do you want to create?",
-  "multiple": false,
-  "options": [
-    { "label": "Code reviewer", "description": "Analyzes code for bugs, security, quality" },
-    { "label": "Task automator", "description": "Executes repeatable workflows (deploy, release, test)" },
-    { "label": "Knowledge assistant", "description": "Answers questions using domain expertise" },
-    { "label": "Operator", "description": "Interacts with external systems (Jira, GitHub) via tools/MCP" },
-    { "label": "Orchestrator", "description": "Coordinates multiple agents/steps in a pipeline" },
-    { "label": "Something else (I'll describe)", "description": "Tell me what you have in mind" }
-  ]
-}])
-```
-
-## Step 2: Interview (3-5 questions, adaptive)
-
-**CRITICAL RULE: You MUST ask these questions ONE AT A TIME using the `question([{...}])` JSON format. Wait for the user to answer the first question before outputting the second question. NEVER output all the questions at once. NEVER output plain text questions like "1. Agent name...".**
-
-**Question 1: Scope & Task**
-```json
-question([{
-  "header": "Scope",
-  "question": "What's the primary task this agent performs?",
-  "multiple": false,
-  "options": [
-    // Generate 3-4 opinionated options BASED ON the agent type selected in Step 1
-    { "label": "{most likely task}", "description": "{tradeoff}" },
-    { "label": "{second most likely}", "description": "{tradeoff}" },
-    { "label": "{third option}", "description": "{tradeoff}" },
-    { "label": "Something else (I'll describe)", "description": "Tell me what you have in mind" }
+    { "label": "Yes (Recommended)", "description": "Use {recommended_slug}" },
+    { "label": "No, let me type one", "description": "I will provide a custom handle" }
   ]
 }])
 ```
@@ -199,426 +88,83 @@ question([{
 ```json
 question([{
   "header": "Mode",
-  "question": "How will you interact with this agent?",
+  "question": "Based on your description, this sounds like a {recommended_mode}. Confirm?",
   "multiple": false,
   "options": [
-    // IMPORTANT: Contextually evaluate the agent design and append "(Recommended)" to the single most appropriate label below.
-    { "label": "Primary Agent", "description": "Best for agents you talk to directly as your main chat assistant" },
-    { "label": "Subagent", "description": "Best for specialized, scoped tasks delegated by other agents or invoked via @mention" },
+    { "label": "{recommended_mode} (Recommended)", "description": "Matches your narrative description" },
+    { "label": "{the_other_mode}", "description": "Switch to the alternative mode" },
     { "label": "Something else (I'll describe)", "description": "Tell me what you have in mind" }
   ]
 }])
 ```
 
-**Question 3: Output Format**
+**Question 3: Permissions**
 ```json
 question([{
-  "header": "Output",
-  "question": "What should the agent produce?",
+  "header": "Permissions",
+  "question": "I recommend Edit: {recommended_edit} and Bash: {recommended_bash}. Confirm?",
   "multiple": false,
   "options": [
-    { "label": "{most natural output for this agent type}", "description": "{details}" },
-    { "label": "{alternative format}", "description": "{details}" },
-    { "label": "{minimal format}", "description": "{details}" },
-    { "label": "Something else (I'll describe)", "description": "Tell me what you have in mind" }
+    { "label": "Yes (Recommended)", "description": "Use recommended permissions" },
+    { "label": "Read-only", "description": "Edit: deny, Bash: deny" },
+    { "label": "Full access", "description": "Edit: allow, Bash: allow" },
+    { "label": "Something else", "description": "Custom configuration" }
   ]
 }])
 ```
 
-**Question 4: Determinism & Tools**
-```json
-question([{
-  "header": "Determinism",
-  "question": "Which parts of this workflow should use strict code (Tools) instead of LLM judgment?",
-  "multiple": true,
-  "options": [
-    // ALWAYS include the following standard options exactly as written.
-    { "label": "{Specific recommendation based on context}", "description": "Recommended because {brief technical reason}." },
-    { "label": "Input validation", "description": "Verify schemas, existence of files, or credentials" },
-    { "label": "Data transformation", "description": "Parse raw text or format structured outputs (JSON/YAML)" },
-    { "label": "External system calls", "description": "Execute CLI commands, query APIs, or write to disk" },
-    { "label": "None", "description": "The LLM's reasoning is sufficient for all steps" },
-    { "label": "Something else (I'll describe)", "description": "Tell me what you have in mind" }
-  ]
-}])
-```
+## Step 4: Scaffold the Monolith
 
-**Question 5: Knowledge Needs (ask only if relevant)**
-```json
-question([{
-  "header": "Knowledge",
-  "question": "What kind of specialized knowledge does this agent need to reference?",
-  "multiple": true,
-  "options": [
-    // IMPORTANT: Contextually evaluate the agent design and append "(Recommended)" to the single most appropriate label below.
-    { "label": "Procedural (new skill)", "description": "Step-by-step procedures or decision trees → creates a SKILL" },
-    { "label": "Domain conventions (new skill)", "description": "Specific naming rules or format rules → creates a SKILL" },
-    { "label": "Global rules (repo-level)", "description": "Universal rules via AGENTS.md or opencode/rules/" },
-    { "label": "Existing reference docs", "description": "Link to documentation already available in the workspace" },
-    { "label": "None", "description": "Core behavioral prompt is sufficient" },
-    { "label": "Something else (I'll describe)", "description": "Tell me what you have in mind" }
-  ]
-}])
-```
+Create the monolithic agent file at `.opencode/agents/{slug}.md`.
+Combine the confirmed metadata (YAML) with the `monolithic_prompt` generated by the architect.
+Do NOT create any tools or skills yet.
 
-**Question 5a: Reference Document Location (Ask ONLY if user selects "Existing reference docs" in Question 5)**
+## Step 5: Generate Eval Suite & Baseline Run
+
+1. Consult `eval-taxonomy.md` to select dimensions based on the monolithic prompt.
+2. Generate `EVAL-SPEC.md` and at least 8 test cases in `.opencode/evals/{slug}/cases/`.
+3. Run the baseline end-to-end eval suite. (Simulate the run based on the cases and the prompt).
+
+## Step 6: Architectural Analysis (The "Aha" Moment)
+
+Invoke the `@aok-architect` subagent again.
+Pass it the `monolithic_prompt`, the `eval_cases`, and the `eval_results` (which cases passed/failed). Instruct it to use `<mode_2_extraction>`.
+
+Wait for it to return the Markdown report with `Recommended Extractions`.
+
+## Step 7: The Iteration Loop
+
+Present the architect's report to the user, followed immediately by an interactive menu:
+
 ```json
 question([{
-  "header": "Reference Docs",
-  "question": "How should we handle the reference documentation?",
+  "header": "Next Action",
+  "question": "What should we do next to improve the {slug} agent?",
   "multiple": false,
   "options": [
-    { "label": "Provide file path", "description": "I know the exact path to the file" },
-    { "label": "Search workspace", "description": "Help me find the right file in the repo" },
-    { "label": "Research and create it", "description": "The document doesn't exist yet, let's create it" },
-    { "label": "Something else (I'll describe)", "description": "Tell me what you have in mind" }
-  ]
-}])
-```
-*(If "Provide file path", ask for the path in the next turn. If "Search workspace", ask for a keyword and use search tools to find it. If "Research and create it", plan to generate this new reference document as part of the scaffolding in Step 5).*
-
-**Question 6: Quality Bar (always ask)**
-```json
-question([{
-  "header": "Quality",
-  "question": "Which quality dimensions are critical for this agent?",
-  "multiple": true,
-  "options": [
-    { "label": "Correctness", "description": "Outputs must be factually accurate" },
-    { "label": "Completeness", "description": "Must cover all aspects, no gaps" },
-    { "label": "Format consistency", "description": "Must always produce same structure" },
-    { "label": "Safety/boundaries", "description": "Must stay in scope, refuse dangerous ops" },
-    { "label": "Speed/conciseness", "description": "Must be fast and not verbose" },
-    { "label": "Something else (I'll describe)", "description": "Tell me what you have in mind" }
+    // Dynamically insert the Architect's top recommendation here
+    { "label": "Extract Tool: {tool_name} (Recommended)", "description": "Replaces prompt steps with deterministic code." },
+    { "label": "Extract Skill: {skill_name}", "description": "Moves procedural knowledge out of the main prompt." },
+    { "label": "Refine Prompt", "description": "Adjust the instructions based on eval failures." },
+    { "label": "Generate More Evals", "description": "Increase test coverage." },
+    { "label": "Commit Changes", "description": "Create a git commit of the current passing state." },
+    { "label": "Finish", "description": "The agent is ready." }
   ]
 }])
 ```
 
-**Interview principles:**
-- If the user gives a comprehensive answer to any question, skip questions it already covers
-- Capture specific examples of good/bad behavior — these become eval cases
-- Listen for "always" / "never" / "must" — these signal tool opportunities
-- Listen for "it depends" / "use judgment" — these stay in the prompt
-- Maximum 5 questions — if you have enough after 3, move on
-
-After enough context, present a summary for confirmation:
-
-```json
-question([{
-  "header": "✅ Agent Design",
-  "question": "Here's what I'll build. Look right?",
-  "multiple": false,
-  "options": [
-    { "label": "Yes, generate it", "description": "Create all artifacts now" },
-    { "label": "Adjust something", "description": "Let me refine a detail" },
-    { "label": "Start over", "description": "I want to rethink the approach" }
-  ]
-}])
-```
-
-Display the summary ABOVE the "question":
-```
-## Agent Design Summary
-
-**Name:** {agent-name}
-**Purpose:** {one-line description}
-**Mode:** {primary | subagent}
-**Architecture:** {single-purpose | tool-augmented | knowledge-loaded | full-stack}
-
-**Inputs:** {what it receives}
-**Outputs:** {what it produces}
-
-**Tools to create:** {list or "none"}
-**Skills to create:** {list or "none"}
-
-**Eval strategy:** {which test types from eval-taxonomy.md apply}
-**Estimated cases:** {count based on complexity}
-```
-
-## Step 3: Generate Agent Definition
-
-Create the agent markdown file at `.opencode/agents/{agent-name}.md`:
-
-```markdown
----
-description: {description from interview}
-mode: {primary | subagent}
-temperature: {0.1 for deterministic tasks, 0.3 for creative}
-permissions:
-  edit: {allow | ask | deny}
-  bash: {allow | ask | deny}
----
-
-{System prompt derived from interview}
-```
-
-**Agent prompt structure:**
-1. Role and purpose (1-2 sentences)
-2. Inputs it expects
-3. Step-by-step process (referencing tools and skills)
-4. Output format
-5. Quality criteria / guardrails
-
-## Step 4: Generate Tools (if applicable)
-
-For each deterministic step identified in the interview, create a tool at `.opencode/tools/{agent-name}-{tool-name}.ts`:
-
-```typescript
-import { tool } from "@opencode-ai/plugin"
-
-export default tool({
-  "description": "{what this tool does}",
-  args: {
-    // Use JSON Schema: { type: "string", description: "..." }
-    // For arrays: { type: "array", items: { type: "string" }, description: "..." }
-  },
-  async execute(args, context) {
-    // Deterministic implementation
-    return result
-  },
-})
-```
-
-**Tool design principles:**
-- Tools REPLACE LLM judgment with code — don't create tools that just wrap an LLM call
-- Tools should be idempotent when possible
-- Tools should validate inputs and return clear errors
-- Tools should return structured data the agent can reason about
-
-## Step 5: Generate Skill (if applicable)
-
-For procedural knowledge identified in the interview, create `.opencode/skills/{agent-name}/SKILL.md`:
-
-```markdown
----
-name: {agent-name}
-description: {when to load this skill}
-license: MIT
-compatibility: opencode
-metadata:
-  category: {category}
----
-
-# {Agent Name} Skill
-
-## Overview
-{What this skill teaches}
-
-## When to Use
-{Conditions for loading this skill}
-
-## Process
-{Step-by-step procedural knowledge}
-
-## References
-{Any reference files in references/ subdirectory}
-```
-
-## Step 6: Generate Slash Command
-
-Create `.opencode/commands/{agent-name}.md`:
-
-```markdown
----
-description: {brief description}
-agent: {agent-name}
-subtask: {true if subagent}
----
-
-{Command prompt template with $ARGUMENTS placeholder}
-```
-
-## Step 7: Generate Eval Suite
-
-**Consult the `eval-taxonomy.md` AOK reference** to select the most relevant eval types for this agent.
-
-### 7a: Select Eval Dimensions
-
-Based on what the agent does, select from the taxonomy:
-
-| Agent Does... | Include These Tests |
-|--------------|---------------------|
-| Produces structured output | Format Compliance, Completeness, Consistency |
-| Uses tools | Tool Usage Correctness, Tool Integration, Error Recovery |
-| Makes decisions | Decision Quality, Reasoning Quality, Scope Adherence |
-| Takes user input | Empty/Minimal Input, Ambiguous Input, Adversarial Input |
-| Has restricted permissions | Permission Boundaries, Scope Adherence |
-| Loads skills | Skill Loading, Context Utilization |
-| Is user-facing | Tone Appropriateness, Helpfulness |
-
-**Always include:** Task Completion + End-to-End Flow + at least one robustness test.
-
-### 7b: Write EVAL-SPEC.md
-
-Create `.opencode/evals/{agent-name}/EVAL-SPEC.md` with:
-- Selected dimensions from taxonomy (with priority: Critical/High/Medium)
-- Concrete rubrics (PASS/FAIL) for each dimension
-- Measurement approach (Code check / LLM Judge / Human)
-- Passing criteria
-
-### 7c: Generate Test Cases
-
-Generate cases based on agent complexity:
-- Simple (prompt only): minimum 8 cases
-- Tool-augmented: minimum 12 cases
-- Knowledge-loaded: minimum 12 cases
-- Full stack: minimum 15 cases
-
-**Distribution:**
-- 30% Happy path (standard usage, expected inputs)
-- 25% Edge cases (boundary conditions, unusual valid inputs)
-- 25% Robustness (empty input, malformed data, overload)
-- 10% Adversarial (prompt injection, scope violations, manipulation)
-- 10% Integration (tool usage, skill loading, permission boundaries)
-
-Write cases to `.opencode/evals/{agent-name}/cases/`:
-- One markdown file per case: `01-happy-path-basic.md`, `02-happy-path-complex.md`, etc.
-- Each case has: Category, Input, Expected Behavior, Checks (verifiable assertions)
-
-## Step 8: End-to-End Test (MANDATORY)
-
-**This step is NOT optional.** Before reporting success, run the agent end-to-end.
-
-### 8a: Select E2E Scenario
-
-Pick the MOST representative happy-path case from the eval suite.
-
-### 8b: Execute the Agent
-
-Simulate a full run:
-1. Load the agent's system prompt
-2. Apply it to the E2E test case input
-3. If tools were created — verify they'd be called correctly
-4. If skills were created — verify loading triggers work
-5. Generate the full output the agent would produce
-
-### 8c: Evaluate Against Rubrics
-
-Apply ALL Critical and High dimension rubrics to the E2E output:
-- Does it complete the task? (Task Completion)
-- Is the format correct? (Format Compliance)
-- Did it use tools correctly? (Tool Usage — if applicable)
-- Is it within scope? (Scope Adherence)
-
-### 8d: Incorporate Feedback
-
-**If the E2E test reveals issues:**
-
-For EACH issue found:
-1. **Diagnose**: Is this a prompt gap, missing tool, missing knowledge, or format problem?
-2. **Fix immediately**:
-   - Prompt gap → edit `.opencode/agents/{agent-name}.md` with clearer instructions
-   - Missing tool → create the tool, update agent prompt to reference it
-   - Missing knowledge → add to skill or prompt
-   - Format issue → add explicit output template to prompt
-3. **Add a regression case** to the eval suite covering the discovered issue
-
-**Report adjustments made:**
-```
-### 🔄 E2E Adjustments Applied
-
-{N} issues found during end-to-end test:
-1. {issue} → {fix applied}
-2. {issue} → {fix applied}
-
-Agent prompt updated. {N} new eval cases added.
-```
-
-### 8e: Re-run E2E (if fixes were applied)
-
-After incorporating fixes, re-run the same E2E scenario to confirm the fix works.
-Repeat until the E2E test passes cleanly.
-
-## Step 9: Report Results
-
-Present the final report with tables:
-
-```
-## ✅ Agent Created: {agent-name}
-
-### Files Generated
-
-| Path | Purpose |
-|------|---------|
-| `.opencode/agents/{agent-name}.md` | Agent definition (prompt + config) |
-| `.opencode/commands/{agent-name}.md` | Slash command |
-| `.opencode/tools/{agent-name}-*.ts` | Deterministic tools ({N} tools) |
-| `.opencode/skills/{agent-name}/SKILL.md` | Procedural knowledge |
-| `.opencode/evals/{agent-name}/` | Eval suite ({N} cases) |
-
-### E2E Test Results
-
-| Dimension | Priority | Result | Notes |
-|-----------|----------|--------|-------|
-| Task Completion | Critical | ✅ PASS | — |
-| Format Compliance | High | ✅ PASS | — |
-| Tool Usage | High | ✅ PASS | — |
-| Scope Adherence | Medium | ✅ PASS | — |
-
-**E2E Status:** ✅ Passed {(or: ✅ Passed after {N} adjustments)}
-
-### Eval Coverage
-
-| Dimension | Priority | Measurement | Cases |
-|-----------|----------|-------------|-------|
-| {dimension 1} | Critical | {Code/LLM Judge} | {N} |
-| {dimension 2} | High | {Code/LLM Judge} | {N} |
-| {dimension 3} | Medium | {LLM Judge} | {N} |
-
-### Next Steps
-
-1. Run `/aok-eval {agent-name}` to run the full eval suite
-2. Try the agent: `/{agent-name} {example input}`
-3. Compare models: `/aok-eval-compare {agent-name}`
-4. Iterate: `/aok-iterate {agent-name}` if evals reveal issues
-```
+**Handling Loop Actions:**
+- **Extract Tool:** Generate the `.ts` tool file. CRITICALLY: Edit the `.md` agent prompt to delete the heavy instructions and replace them with "Call the {tool_name} tool". Re-run evals. Loop.
+- **Extract Skill:** Generate the `SKILL.md` file. CRITICALLY: Edit the `.md` agent prompt to delete the heavy instructions. Re-run evals. Loop.
+- **Commit Changes:** Run `git status`, `git add .opencode/agents/{slug}.md` (and related files), and `git commit -m "refactor({slug}): {description of extraction}"`. Loop.
+- **Finish:** Exit the loop and report success.
 
 </process>
 
 <guardrails>
 - **FATAL ERROR:** The `options` property in the `question([{...}])` JSON MUST be a valid JSON array wrapped in `[` and `]`. Never output options as a raw comma-separated list of objects.
-- **FATAL ERROR:** Outputting a numbered list of questions (e.g. "1. Agent name...", "2. Purpose...") is strictly forbidden. You must ALWAYS use the `question([{...}])` JSON format for ANY user interaction.
+- **FATAL ERROR:** Outputting a numbered list of questions is strictly forbidden. You must ALWAYS use the `question([{...}])` JSON format for ANY user interaction.
 - ALWAYS ask ONE question at a time. Wait for the user to answer before asking the next one.
-- ALWAYS use `question()` format for user interaction — never plain-text questions
-- ALWAYS include opinionated options with the recommended choice marked
-- ALWAYS end option lists with a freeform escape ("Something else (I'll describe)")
-- ALWAYS generate an eval suite — no agent ships without evals
-- ALWAYS run end-to-end test before reporting success — this is non-negotiable
-- ALWAYS incorporate E2E feedback into the agent before finishing
-- Tools should add DETERMINISM, not just wrap shell commands
-- Skills should encode PROCEDURAL KNOWLEDGE, not just reference docs
-- Agent prompts should be SPECIFIC and ACTIONABLE, not vague
-- Consult the `eval-taxonomy.md` AOK reference to select eval dimensions — don't guess
-- If the agent is trivial (no tools, no skills needed), still generate evals and E2E test
+- ALWAYS use `question()` format for user interaction - never plain-text questions.
+- **FATAL ERROR:** Do NOT delegate the interactive questioning to the architect subagent. You are the orchestrator.
 </guardrails>
-
-<tool_decision_framework>
-**Create a tool when:**
-- A step has a deterministic correct answer (validation, parsing, formatting)
-- The step involves structured data transformation
-- The step queries external systems (APIs, databases, files)
-- Reliability > flexibility for this step
-
-**Keep in the prompt when:**
-- The step requires judgment, creativity, or context-sensitivity
-- The step needs to adapt to novel situations
-- The "right answer" varies by context
-</tool_decision_framework>
-
-<knowledge_routing>
-**Put in Global Context (AGENTS.md / GEMINI.md) when (Reference Knowledge):**
-- The rule applies repo-wide
-- It dictates universal best practices or tech stack choices
-- Every agent and developer needs to know it implicitly
-
-**Create a SKILL when (Procedural Knowledge):**
-- There's a multi-step process the agent needs to follow conditionally
-- Explicit heuristics, decision trees, or troubleshooting steps are needed conditionally
-- There are reference tables, API schemas, or lookup data that should only be fetched on-demand (never core behavior)
-- The knowledge applies to multiple agents or contexts but isn't repo-wide
-
-**Keep in the PROMPT when (Behavioral Knowledge):**
-- The instructions describe core identity and behavioral rules (always needed)
-- The instructions define *how* the agent thinks or acts on every invocation
-- The knowledge is concise and essential for its baseline task
-</knowledge_routing>
