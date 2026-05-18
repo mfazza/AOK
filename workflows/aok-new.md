@@ -255,11 +255,27 @@ question([{
     { "label": "Domain conventions (new skill)", "description": "Specific naming rules or format rules → creates a SKILL" },
     { "label": "Global rules (repo-level)", "description": "Universal rules via AGENTS.md or opencode/rules/" },
     { "label": "Existing reference docs", "description": "Link to documentation already available in the workspace" },
-    { "label": "None needed", "description": "Core behavioral prompt is sufficient" },
+    { "label": "None", "description": "Core behavioral prompt is sufficient" },
     { "label": "Something else (I'll describe)", "description": "Tell me what you have in mind" }
   ]
 }])
 ```
+
+**Question 5a: Reference Document Location (Ask ONLY if user selects "Existing reference docs" in Question 5)**
+```json
+question([{
+  "header": "Reference Docs",
+  "question": "How should we handle the reference documentation?",
+  "multiple": false,
+  "options": [
+    { "label": "Provide file path", "description": "I know the exact path to the file" },
+    { "label": "Search workspace", "description": "Help me find the right file in the repo" },
+    { "label": "Research and create it", "description": "The document doesn't exist yet, let's create it" },
+    { "label": "Something else (I'll describe)", "description": "Tell me what you have in mind" }
+  ]
+}])
+```
+*(If "Provide file path", ask for the path in the next turn. If "Search workspace", ask for a keyword and use search tools to find it. If "Research and create it", plan to generate this new reference document as part of the scaffolding in Step 5).*
 
 **Question 6: Quality Bar (always ask)**
 ```json
