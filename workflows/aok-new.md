@@ -33,33 +33,63 @@ Required files for this workflow:
 </orchestration_rules>
 
 <questioning_format>
-**CRITICAL: ALL questions to the user MUST use the exact `question()` selector format provided in the steps.**
+**CRITICAL: ALL questions to the user MUST use the exact `question()` selector format.**
 **NEVER output a numbered list of questions as plain text.**
 
 UX Rules:
 - ONLY output the `question([{...}])` block when asking a question. DO NOT prepend conversational text.
-- Ensure the JSON inside `question()` is STRICTLY valid. **CRITICAL:** The `options` property MUST be a valid JSON array enclosed in `[` and `]`. Do not drop the array brackets!
-- Users navigate options with **arrow keys** (↑↓) and confirm with **Return**. If `multiSelect` is true, they select/deselect with **Space** and confirm with **Return**.
-- Ask **ONE question at a time** — fully resolve each before moving to the next
-- Options should be OPINIONATED — put the recommended choice first with "(Recommended)"
-- The LAST option is ALWAYS a freeform escape hatch: "Something else (I'll describe)"
-- Each option has a `label` and a `description` explaining the tradeoff
-- NEVER ask open-ended questions as plain text — always provide curated options
+- Ensure the JSON inside `question()` is STRICTLY valid.
+- Users navigate options with **arrow keys** (↑↓) and confirm with **Return**.
+- Ask **ONE question at a time** — fully resolve each before moving to the next.
+- Options should be OPINIONATED — put the recommended choice first with "(Recommended)".
+- The LAST option is ALWAYS a freeform escape hatch: "Something else (I'll describe)".
+- NEVER ask open-ended questions as plain text — always provide curated options.
+
+**MANDATORY JSON TEMPLATE:**
+When generating a question, you MUST copy this exact structure, including all array brackets `[` and `]`:
+```json
+question([{
+  "header": "Short Title",
+  "question": "The question text?",
+  "multiple": false,
+  "options": [
+    { "label": "Option 1", "description": "Details" },
+    { "label": "Option 2", "description": "Details" },
+    { "label": "Something else (I'll describe)", "description": "Escape hatch" }
+  ]
+}])
+```
+**FATAL ERROR:** Do NOT drop the `[` and `]` brackets around the `options` property. It must always be an array.
 </questioning_format>
 
 <process>
 
-## Step 1: The Narrative Brain-Dump
+## Step 1: Choose Creation Mode
 
-If `$ARGUMENTS` is empty, you MUST IMMEDIATELY invoke the `ask_user` tool (using your native tool-calling capabilities, NOT by outputting a markdown block) to capture the agent's description in a text box.
-**CRITICAL:** DO NOT output any conversational text, preambles, or instructions like "Please paste the agent narrative now." Call the tool silently.
+If `$ARGUMENTS` is empty, you MUST IMMEDIATELY invoke the `ask_user` tool (using your native tool-calling capabilities, NOT by outputting a markdown block) to present the choice.
+**CRITICAL:** Call the tool silently. Do not output conversational text.
 
 Use these parameters for the tool:
 - `header`: "Agent Design"
-- `type`: "text"
+- `type`: "choice"
 - `question`: "Tell me about the agent you want to build. What is its name, its primary goal, and how should it achieve it?"
+- `placeholder`: "e.g. I want a PR reviewer named 'code-guard'..."
+- `options`: 
+  - `label`: "Help me figure it out"
+  - `description`: "Ask me guiding questions to design the agent."
 
-Wait for the user's description.
+Wait for the user's response.
+
+### If the user selects "Help me figure it out":
+Invoke the `ask_user` tool with `type: "text"` sequentially to ask 3 guiding questions ONE AT A TIME.
+1. `question`: "What is the primary goal or purpose of this agent?" (`header`: "Goal")
+2. `question`: "What kind of inputs will it receive, and what should the final output look like?" (`header`: "I/O")
+3. `question`: "Are there any specific rules, constraints, or tools it must use?" (`header`: "Constraints")
+
+Combine the answers into a single narrative and use it as the user's description for Step 2.
+
+### If the user provides text (via the built-in 'Other' option):
+Use their text directly as the narrative description for Step 2.
 
 ## Step 2: Synthesis (Internal)
 
