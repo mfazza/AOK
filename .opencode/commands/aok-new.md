@@ -236,7 +236,7 @@ question([{
 ```json
 question([{
   "header": "Quality",
-  "question": "What matters most for this agent's quality?",
+  "question": "Which quality dimensions are critical for this agent?",
   "multiSelect": true,
   "options": [
     { "label": "Correctness", "description": "Outputs must be factually accurate" },
