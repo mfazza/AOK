@@ -140,6 +140,22 @@ Usage:
 /aok-skill my-agent
 ```
 
+### Maintenance
+
+**`/aok-delete [agent-name]`**
+Delete an agent and all associated artifacts.
+
+- Asks for scope: **Local**, **Global**, or **Both**
+- Identifies and previews all artifacts (agent def, tools, skills, evals)
+- **Requires final confirmation** before deletion
+- Performs permanent cleanup of identified files and directories
+
+Usage:
+```
+/aok-delete my-agent
+/aok-delete
+```
+
 ## What Gets Generated
 
 ```

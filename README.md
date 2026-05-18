@@ -41,6 +41,7 @@ For **existing agents** (not created with AOK):
 | `/aok-iterate` | Improve an agent based on eval failures |
 | `/aok-tools` | Add or update custom tools for an agent |
 | `/aok-skill` | Create or update a skill for an agent |
+| `/aok-delete` | Delete an agent and all associated artifacts (tools, skills, evals) |
 | `/aok-help` | Show this reference |
 
 ## What Gets Generated

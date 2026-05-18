@@ -103,6 +103,7 @@ Copy all workflow files from the AOK source to `$TARGET/commands/`:
 - `aok-tools.md`
 - `aok-skill.md`
 - `aok-help.md`
+- `aok-delete.md`
 - `aok-install.md` (this file)
 
 ### 3b: Install Agents
@@ -180,6 +181,7 @@ Based on selection, output the following summary (and/or write it to `$TARGET/ao
 | `/aok-iterate` | Improve from eval failures |
 | `/aok-tools` | Add deterministic tools |
 | `/aok-skill` | Create procedural knowledge |
+| `/aok-delete` | Delete an agent and all associated artifacts |
 | `/aok-help` | Show command reference |
 
 **Get started:** `/aok-new` to create your first agent, or `/aok-audit` to audit an existing one.
