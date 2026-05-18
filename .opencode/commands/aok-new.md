@@ -188,7 +188,22 @@ question([{
 }])
 ```
 
-**Question 2: Output Format**
+**Question 2: Operating Mode**
+```json
+question([{
+  "header": "Mode",
+  "question": "How will you interact with this agent?",
+  "multiple": false,
+  "options": [
+    // IMPORTANT: Contextually evaluate the agent design and append "(Recommended)" to the single most appropriate label below.
+    { "label": "Primary Agent", "description": "Best for agents you talk to directly as your main chat assistant" },
+    { "label": "Subagent", "description": "Best for specialized, scoped tasks delegated by other agents or invoked via @mention" },
+    { "label": "Something else (I'll describe)", "description": "Tell me what you have in mind" }
+  ]
+}])
+```
+
+**Question 3: Output Format**
 ```json
 question([{
   "header": "Output",
@@ -203,7 +218,7 @@ question([{
 }])
 ```
 
-**Question 3: Determinism & Tools**
+**Question 4: Determinism & Tools**
 ```json
 question([{
   "header": "Determinism",
@@ -220,7 +235,7 @@ question([{
 }])
 ```
 
-**Question 4: Knowledge Needs (ask only if relevant)**
+**Question 5: Knowledge Needs (ask only if relevant)**
 ```json
 question([{
   "header": "Knowledge",
@@ -238,7 +253,7 @@ question([{
 }])
 ```
 
-**Question 5: Quality Bar (always ask)**
+**Question 6: Quality Bar (always ask)**
 ```json
 question([{
   "header": "Quality",
@@ -304,7 +319,6 @@ Create the agent markdown file at `.opencode/agents/{agent-name}.md`:
 ---
 description: {description from interview}
 mode: {primary | subagent}
-model: {appropriate model}
 temperature: {0.1 for deterministic tasks, 0.3 for creative}
 permissions:
   edit: {allow | ask | deny}
