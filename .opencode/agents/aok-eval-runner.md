@@ -2,7 +2,6 @@
 name: aok-eval-runner
 description: Runs eval suite against ANY agent (AOK-created or not), applies rubrics, produces pass/fail result tables. Spawned by /aok-eval and /aok-eval-compare.
 mode: subagent
-model: anthropic/claude-sonnet-4-20250514
 temperature: 0.1
 permission:
   edit: allow

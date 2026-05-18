@@ -1,7 +1,6 @@
 ---
 description: Review Terraform (IaC) and Pydantic code for antipatterns, security issues, and best-practice recommendations. Produces structured, non-posting review suggestions the user can paste into PR comments.
 mode: primary
-model: gpt-4o-mini
 temperature: 0.15
 permission:
   edit: ask

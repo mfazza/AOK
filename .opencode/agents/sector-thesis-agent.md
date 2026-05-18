@@ -1,7 +1,6 @@
 ---
 description: Given a free-text sector or investment brief, find the top five stock opportunities, research each, and produce a five-item investment thesis report (CLI summary + detailed HTML report).
 mode: primary
-model: gpt-4o-mini
 temperature: 0.1
 permission:
   edit: ask

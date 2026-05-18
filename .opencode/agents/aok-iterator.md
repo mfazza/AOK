@@ -2,7 +2,6 @@
 name: aok-iterator
 description: Diagnoses eval failures and applies targeted fixes to agent prompts, tools, and skills. Spawned by /aok-iterate orchestrator.
 mode: subagent
-model: anthropic/claude-sonnet-4-20250514
 temperature: 0.2
 permission:
   edit: allow

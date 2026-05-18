@@ -2,7 +2,6 @@
 name: aok-agent-designer
 description: Designs agent architecture (prompt + tools + skills) from interview context. Produces agent.md, identifies tool/skill opportunities. Spawned by /aok-new orchestrator.
 mode: subagent
-model: anthropic/claude-sonnet-4-20250514
 temperature: 0.2
 permission:
   edit: allow

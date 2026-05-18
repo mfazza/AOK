@@ -1,7 +1,6 @@
 ---
 description: {AGENT_DESCRIPTION}
 mode: {MODE}
-model: {MODEL}
 temperature: {TEMPERATURE}
 permission:
   edit: {EDIT_PERMISSION}

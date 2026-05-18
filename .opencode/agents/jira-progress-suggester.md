@@ -1,7 +1,6 @@
 ---
 description: "Suggest actionable next steps for the user's most recent open Jira issues (top 10 across 3 most-recent projects the user created tickets in)."
 mode: primary
-model: gpt-4o
 temperature: 0.1
 permission:
   edit: ask
