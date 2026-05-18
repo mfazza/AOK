@@ -8,7 +8,8 @@ Install the AOK framework into the user's opencode setup. Always asks whether to
 </purpose>
 
 <questioning_format>
-**ALL questions to the user MUST use the `question()` selector format.**
+**CRITICAL: ALL questions to the user MUST use the exact `question()` selector format provided in the steps.**
+**NEVER output a numbered list of questions as plain text.**
 
 UX Rules:
 - ONLY output the `question([{...}])` block when asking a question. DO NOT prepend conversational text.
@@ -191,3 +192,8 @@ Based on selection, output the following summary (and/or write it to `$TARGET/ao
 
 
 </process>
+
+<guardrails>
+- **FATAL ERROR:** You MUST use the exact `question([{...}])` JSON template provided in the steps. Do not modify the JSON structure, and NEVER drop the `[` and `]` brackets around the `options` array. The options property must always be an array.
+- ALWAYS use `question()` format for user interaction — never plain-text questions.
+</guardrails>
