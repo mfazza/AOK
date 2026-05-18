@@ -210,3 +210,10 @@ The agent can now load this skill on-demand when {trigger condition}.
 - The instructions define *how* the agent thinks or acts on every invocation
 - The knowledge is concise and essential for its baseline task
 </knowledge_routing>
+
+<guardrails>
+- **FATAL ERROR:** The `options` property in the `question([{...}])` JSON MUST be a valid JSON array wrapped in `[` and `]`. Never output options as a raw comma-separated list of objects.
+- **FATAL ERROR:** Outputting a numbered list of questions is strictly forbidden. You must ALWAYS use the `question([{...}])` JSON format for ANY user interaction.
+- ALWAYS ask ONE question at a time. Wait for the user to answer before asking the next one.
+- ALWAYS use `question()` format for user interaction - never plain-text questions.
+</guardrails>

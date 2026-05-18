@@ -266,3 +266,10 @@ Include the full table output so results can be compared across runs.
 - Watch for determinism opportunities during eval — if the agent's output is always the same structure, that's a tool candidate
 - Watch for injection surfaces during eval — if user input can alter agent behavior unexpectedly, flag it
 </eval_principles>
+
+<guardrails>
+- **FATAL ERROR:** The `options` property in the `question([{...}])` JSON MUST be a valid JSON array wrapped in `[` and `]`. Never output options as a raw comma-separated list of objects.
+- **FATAL ERROR:** Outputting a numbered list of questions is strictly forbidden. You must ALWAYS use the `question([{...}])` JSON format for ANY user interaction.
+- ALWAYS ask ONE question at a time. Wait for the user to answer before asking the next one.
+- ALWAYS use `question()` format for user interaction - never plain-text questions.
+</guardrails>
