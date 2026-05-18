@@ -25,35 +25,18 @@ Required files for this workflow:
 - `eval-taxonomy.md` — Test types for verifying fixes
 </required_reading>
 
-<questioning_format>
-**CRITICAL: ALL questions to the user MUST use the exact `question()` selector format.**
-**NEVER output a numbered list of questions as plain text.**
+<user_interaction_rules>
+**CRITICAL: You MUST use your native `ask_user` tool-calling capability for ALL user interactions.**
+**NEVER output a markdown block with `question([...])`. NEVER output a numbered list of questions as plain text.**
 
 UX Rules:
-- ONLY output the `question([{...}])` block when asking a question. DO NOT prepend conversational text.
-- Ensure the JSON inside `question()` is STRICTLY valid.
-- Users navigate options with **arrow keys** (↑↓) and confirm with **Return**.
+- ALWAYS use the native `ask_user` tool. Do NOT print JSON to the screen. Call the tool silently without conversational preambles.
 - Ask **ONE question at a time** — fully resolve each before moving to the next.
+- For multiple choice, use `type: "choice"`.
 - Options should be OPINIONATED — put the recommended choice first with "(Recommended)".
-- The LAST option is ALWAYS a freeform escape hatch: "Something else (I'll describe)".
-- NEVER ask open-ended questions as plain text — always provide curated options.
-
-**MANDATORY JSON TEMPLATE:**
-When generating a question, you MUST copy this exact structure, including all array brackets `[` and `]`:
-```json
-question([{
-  "header": "Short Title",
-  "question": "The question text?",
-  "multiple": false,
-  "options": [
-    { "label": "Option 1", "description": "Details" },
-    { "label": "Option 2", "description": "Details" },
-    { "label": "Something else (I'll describe)", "description": "Escape hatch" }
-  ]
-}])
-```
-**FATAL ERROR:** Do NOT drop the `[` and `]` brackets around the `options` property. It must always be an array.
-</questioning_format>
+- The LAST option is ALWAYS a freeform escape hatch (e.g. "Something else (I'll describe)").
+- NEVER ask open-ended questions as plain text — always use the `ask_user` tool.
+</user_interaction_rules>
 
 <process>
 
@@ -80,19 +63,17 @@ ls ~/.config/opencode/agents/*.md 2>/dev/null
 
 Then, even if `$ARGUMENTS` contains a name, **ALWAYS present the discovered agents for confirmation.** If `$ARGUMENTS` is provided, pre-highlight that agent but still show the list.
 
-```json
-question([{
-  "header": "Audit Target",
-  "question": "Which agent do you want to audit?",
-  "options": [
-    { "label": "{agent-1} ({location})", "description": "{description from frontmatter or first line}" },
-    { "label": "{agent-2} ({location})", "description": "{description}" },
-    { "label": "{agent-3} ({location})", "description": "{description}" },
-    { "label": "All agents", "description": "Audit everything and produce summary comparison table" },
-    { "label": "Something else (I'll point you to it)", "description": "An agent not in these locations" }
-  ]
-}])
-```
+**ACTION REQUIRED:** Invoke the `ask_user` tool with these parameters:
+- `type`: "choice"
+- `header`: "Audit Target"
+- `question`: "Which agent do you want to audit?"
+- `options`:
+  - `label`: "{agent-1} ({location})", `description`: "{description from frontmatter or first line}"
+  - `label`: "{agent-2} ({location})", `description`: "{description}"
+  - `label`: "{agent-3} ({location})", `description`: "{description}"
+  - `label`: "All agents", `description`: "Audit everything and produce summary comparison table"
+  - `label`: "Something else (I'll point you to it)", `description`: "An agent not in these locations"
+
 
 **STOP HERE.** Wait for the user to select before continuing to Step 2.
 
@@ -249,21 +230,18 @@ Output as structured tables:
 
 ## Step 7: Offer Fixes
 
-```json
-question([{
-  "header": "Apply Fixes",
-  "question": "How would you like to address these findings?",
-  "multiple": false,
-  "options": [
-    { "label": "Fix critical issues only (Recommended)", "description": "Address injection surfaces and high-impact token waste" },
-    { "label": "Fix all — create tools for determinism gaps", "description": "Full refactor: new tools + prompt rewrite + guardrails" },
-    { "label": "Just the injection surfaces", "description": "Security hardening only — add guardrails and input boundaries" },
-    { "label": "Just the determinism opportunities", "description": "Create tools to replace LLM reasoning where possible" },
-    { "label": "None — I just wanted the report", "description": "Save audit results, no changes" },
-    { "label": "Something else (I'll tell you)", "description": "Custom selection of fixes" }
-  ]
-}])
-```
+**ACTION REQUIRED:** Invoke the `ask_user` tool with these parameters:
+- `type`: "choice"
+- `header`: "Apply Fixes"
+- `question`: "How would you like to address these findings?"
+- `options`:
+  - `label`: "Fix critical issues only (Recommended)", `description`: "Address injection surfaces and high-impact token waste"
+  - `label`: "Fix all — create tools for determinism gaps", `description`: "Full refactor: new tools + prompt rewrite + guardrails"
+  - `label`: "Just the injection surfaces", `description`: "Security hardening only — add guardrails and input boundaries"
+  - `label`: "Just the determinism opportunities", `description`: "Create tools to replace LLM reasoning where possible"
+  - `label`: "None — I just wanted the report", `description`: "Save audit results, no changes"
+  - `label`: "Something else (I'll tell you)", `description`: "Custom selection of fixes"
+
 
 ## Step 8: Apply Fixes (if requested)
 
@@ -316,8 +294,8 @@ For each fix to apply:
 </audit_principles>
 
 <guardrails>
-- **FATAL ERROR:** The `options` property in the `question([{...}])` JSON MUST be a valid JSON array wrapped in `[` and `]`. Never output options as a raw comma-separated list of objects.
-- **FATAL ERROR:** Outputting a numbered list of questions is strictly forbidden. You must ALWAYS use the `question([{...}])` JSON format for ANY user interaction.
+- **FATAL ERROR:** You MUST use the native `ask_user` tool for questions. DO NOT output `question([{...}])` markdown blocks.
+- **FATAL ERROR:** Outputting a numbered list of questions is strictly forbidden.
 - ALWAYS ask ONE question at a time. Wait for the user to answer before asking the next one.
-- ALWAYS use `question()` format for user interaction - never plain-text questions.
+- Call the `ask_user` tool silently. Do not print conversational filler.
 </guardrails>

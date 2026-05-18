@@ -20,35 +20,18 @@ Required files for this workflow:
 - `eval-driven-development.md` — Scoring methodology
 </required_reading>
 
-<questioning_format>
-**CRITICAL: ALL questions to the user MUST use the exact `question()` selector format.**
-**NEVER output a numbered list of questions as plain text.**
+<user_interaction_rules>
+**CRITICAL: You MUST use your native `ask_user` tool-calling capability for ALL user interactions.**
+**NEVER output a markdown block with `question([...])`. NEVER output a numbered list of questions as plain text.**
 
 UX Rules:
-- ONLY output the `question([{...}])` block when asking a question. DO NOT prepend conversational text.
-- Ensure the JSON inside `question()` is STRICTLY valid.
-- Users navigate options with **arrow keys** (↑↓) and confirm with **Return**.
+- ALWAYS use the native `ask_user` tool. Do NOT print JSON to the screen. Call the tool silently without conversational preambles.
 - Ask **ONE question at a time** — fully resolve each before moving to the next.
+- For multiple choice, use `type: "choice"`.
 - Options should be OPINIONATED — put the recommended choice first with "(Recommended)".
-- The LAST option is ALWAYS a freeform escape hatch: "Something else (I'll describe)".
-- NEVER ask open-ended questions as plain text — always provide curated options.
-
-**MANDATORY JSON TEMPLATE:**
-When generating a question, you MUST copy this exact structure, including all array brackets `[` and `]`:
-```json
-question([{
-  "header": "Short Title",
-  "question": "The question text?",
-  "multiple": false,
-  "options": [
-    { "label": "Option 1", "description": "Details" },
-    { "label": "Option 2", "description": "Details" },
-    { "label": "Something else (I'll describe)", "description": "Escape hatch" }
-  ]
-}])
-```
-**FATAL ERROR:** Do NOT drop the `[` and `]` brackets around the `options` property. It must always be an array.
-</questioning_format>
+- The LAST option is ALWAYS a freeform escape hatch (e.g. "Something else (I'll describe)").
+- NEVER ask open-ended questions as plain text — always use the `ask_user` tool.
+</user_interaction_rules>
 
 
 <process>
@@ -57,18 +40,15 @@ question([{
 
 Parse `$ARGUMENTS` for the agent name. If empty, prompt:
 
-```json
-question([{
-  "header": "Target Agent",
-  "question": "Which agent do you want to compare across models?",
-  "multiple": false,
-  "options": [
-    { "label": "{agent-1}", "description": "{description}" },
-    { "label": "{agent-2}", "description": "{description}" },
-    { "label": "Something else (I'll tell you)", "description": "An agent not listed" }
-  ]
-}])
-```
+**ACTION REQUIRED:** Invoke the `ask_user` tool with these parameters:
+- `type`: "choice"
+- `header`: "Target Agent"
+- `question`: "Which agent do you want to compare across models?"
+- `options`:
+  - `label`: "{agent-1}", `description`: "{description}"
+  - `label`: "{agent-2}", `description`: "{description}"
+  - `label`: "Something else (I'll tell you)", `description`: "An agent not listed"
+
 
 ## Step 2: Verify Eval Suite Exists
 
@@ -82,21 +62,19 @@ Then execute the aok-eval flow (Step 3 from that workflow) to scaffold evals bef
 
 ## Step 3: Select Models to Compare
 
-```json
-question([{
-  "header": "Model Selection",
-  "question": "Which models do you want to compare?",
-  "multiple": true,
-  "options": [
-    { "label": "anthropic/claude-3-5-sonnet-20241022 (Recommended)", "description": "Anthropic: Best balance of quality and speed" },
-    { "label": "openai/gpt-4o", "description": "OpenAI: Flagship model, great at strict formatting" },
-    { "label": "google/gemini-2.5-pro", "description": "Google: Excellent reasoning and large context" },
-    { "label": "anthropic/claude-3-5-haiku-20241022", "description": "Anthropic: Fast and cost-effective" },
-    { "label": "openai/gpt-4o-mini", "description": "OpenAI: Budget model for simple tasks" },
-    { "label": "Something else (I'll specify)", "description": "Enter model IDs manually" }
-  ]
-}])
-```
+**ACTION REQUIRED:** Invoke the `ask_user` tool with these parameters:
+- `type`: "choice"
+- `header`: "Model Selection"
+- `question`: "Which models do you want to compare?"
+- `multiSelect`: true
+- `options`:
+  - `label`: "anthropic/claude-3-5-sonnet-20241022 (Recommended)", `description`: "Anthropic: Best balance of quality and speed"
+  - `label`: "openai/gpt-4o", `description`: "OpenAI: Flagship model, great at strict formatting"
+  - `label`: "google/gemini-2.5-pro", `description`: "Google: Excellent reasoning and large context"
+  - `label`: "anthropic/claude-3-5-haiku-20241022", `description`: "Anthropic: Fast and cost-effective"
+  - `label`: "openai/gpt-4o-mini", `description`: "OpenAI: Budget model for simple tasks"
+  - `label`: "Something else (I'll specify)", `description`: "Enter model IDs manually"
+
 
 **Minimum:** 2 models must be selected. If the user picks only 1, ask again.
 
@@ -205,20 +183,17 @@ Include all tables and findings for historical reference.
 
 ## Step 8: Offer Next Steps
 
-```json
-question([{
-  "header": "Next Steps",
-  "question": "What would you like to do with these results?",
-  "multiple": false,
-  "options": [
-    { "label": "Switch agent to recommended model (Recommended)", "description": "Update the agent's model setting to {best-model}" },
-    { "label": "Iterate on failures", "description": "Fix issues found across models with /aok-iterate" },
-    { "label": "Run again with different models", "description": "Try other models not included in this comparison" },
-    { "label": "Done for now", "description": "Save results and finish" },
-    { "label": "Something else (I'll tell you)", "description": "Tell me what you want to do" }
-  ]
-}])
-```
+**ACTION REQUIRED:** Invoke the `ask_user` tool with these parameters:
+- `type`: "choice"
+- `header`: "Next Steps"
+- `question`: "What would you like to do with these results?"
+- `options`:
+  - `label`: "Switch agent to recommended model (Recommended)", `description`: "Update the agent's model setting to {best-model}"
+  - `label`: "Iterate on failures", `description`: "Fix issues found across models with /aok-iterate"
+  - `label`: "Run again with different models", `description`: "Try other models not included in this comparison"
+  - `label`: "Done for now", `description`: "Save results and finish"
+  - `label`: "Something else (I'll tell you)", `description`: "Tell me what you want to do"
+
 
 </process>
 
@@ -232,8 +207,8 @@ question([{
 </comparison_principles>
 
 <guardrails>
-- **FATAL ERROR:** The `options` property in the `question([{...}])` JSON MUST be a valid JSON array wrapped in `[` and `]`. Never output options as a raw comma-separated list of objects.
-- **FATAL ERROR:** Outputting a numbered list of questions is strictly forbidden. You must ALWAYS use the `question([{...}])` JSON format for ANY user interaction.
+- **FATAL ERROR:** You MUST use the native `ask_user` tool for questions. DO NOT output `question([{...}])` markdown blocks.
+- **FATAL ERROR:** Outputting a numbered list of questions is strictly forbidden.
 - ALWAYS ask ONE question at a time. Wait for the user to answer before asking the next one.
-- ALWAYS use `question()` format for user interaction - never plain-text questions.
+- Call the `ask_user` tool silently. Do not print conversational filler.
 </guardrails>

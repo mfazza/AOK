@@ -7,35 +7,18 @@ agent: build
 Install the AOK framework into the user's opencode setup. Always asks whether to install locally (project) or globally before proceeding.
 </purpose>
 
-<questioning_format>
-**CRITICAL: ALL questions to the user MUST use the exact `question()` selector format.**
-**NEVER output a numbered list of questions as plain text.**
+<user_interaction_rules>
+**CRITICAL: You MUST use your native `ask_user` tool-calling capability for ALL user interactions.**
+**NEVER output a markdown block with `question([...])`. NEVER output a numbered list of questions as plain text.**
 
 UX Rules:
-- ONLY output the `question([{...}])` block when asking a question. DO NOT prepend conversational text.
-- Ensure the JSON inside `question()` is STRICTLY valid.
-- Users navigate options with **arrow keys** (↑↓) and confirm with **Return**.
+- ALWAYS use the native `ask_user` tool. Do NOT print JSON to the screen. Call the tool silently without conversational preambles.
 - Ask **ONE question at a time** — fully resolve each before moving to the next.
+- For multiple choice, use `type: "choice"`.
 - Options should be OPINIONATED — put the recommended choice first with "(Recommended)".
-- The LAST option is ALWAYS a freeform escape hatch: "Something else (I'll describe)".
-- NEVER ask open-ended questions as plain text — always provide curated options.
-
-**MANDATORY JSON TEMPLATE:**
-When generating a question, you MUST copy this exact structure, including all array brackets `[` and `]`:
-```json
-question([{
-  "header": "Short Title",
-  "question": "The question text?",
-  "multiple": false,
-  "options": [
-    { "label": "Option 1", "description": "Details" },
-    { "label": "Option 2", "description": "Details" },
-    { "label": "Something else (I'll describe)", "description": "Escape hatch" }
-  ]
-}])
-```
-**FATAL ERROR:** Do NOT drop the `[` and `]` brackets around the `options` property. It must always be an array.
-</questioning_format>
+- The LAST option is ALWAYS a freeform escape hatch (e.g. "Something else (I'll describe)").
+- NEVER ask open-ended questions as plain text — always use the `ask_user` tool.
+</user_interaction_rules>
 
 <process>
 
@@ -43,20 +26,18 @@ question([{
 
 **MANDATORY: Always ask this question first. Do NOT assume local or global.**
 
-```json
-question([{
-  "header": "Installation",
-  "question": "Where should AOK be installed (or restored)?",
-  "options": [
-    { "label": "Project-local (Recommended)", "description": "Installs to .opencode/ in the current project. Commands available only in this repo." },
-    { "label": "Global", "description": "Installs to ~/.config/opencode/. Commands available in all projects." },
-    { "label": "Both", "description": "Install globally AND to the current project (project copy takes precedence)." },
-    { "label": "Restore defaults (Local)", "description": "Overwrite existing project-local AOK installation with pristine defaults." },
-    { "label": "Restore defaults (Global)", "description": "Overwrite existing global AOK installation with pristine defaults." },
-    { "label": "Something else (I'll explain)", "description": "Custom installation target" }
-  ]
-}])
-```
+**ACTION REQUIRED:** Invoke the `ask_user` tool with these parameters:
+- `type`: "choice"
+- `header`: "Installation"
+- `question`: "Where should AOK be installed (or restored)?"
+- `options`:
+  - `label`: "Project-local (Recommended)", `description`: "Installs to .opencode/ in the current project. Commands available only in this repo."
+  - `label`: "Global", `description`: "Installs to ~/.config/opencode/. Commands available in all projects."
+  - `label`: "Both", `description`: "Install globally AND to the current project (project copy takes precedence)."
+  - `label`: "Restore defaults (Local)", `description`: "Overwrite existing project-local AOK installation with pristine defaults."
+  - `label`: "Restore defaults (Global)", `description`: "Overwrite existing global AOK installation with pristine defaults."
+  - `label`: "Something else (I'll explain)", `description`: "Custom installation target"
+
 
 **STOP.** Wait for user selection before continuing.
 
@@ -71,17 +52,15 @@ Based on selection:
 If the user selected "Restore defaults (Local)" or "Restore defaults (Global)", automatically assume "Overwrite" and skip the prompt below.
 
 Otherwise, if project-local and a `.opencode/` directory already exists with AOK commands:
-```json
-question([{
-  "header": "Existing Installation",
-  "question": "AOK is already installed here. What should I do?",
-  "options": [
-    { "label": "Overwrite (Recommended)", "description": "Replace all AOK files with the latest version" },
-    { "label": "Skip existing", "description": "Only install files that don't already exist" },
-    { "label": "Cancel", "description": "Don't install anything" }
-  ]
-}])
-```
+**ACTION REQUIRED:** Invoke the `ask_user` tool with these parameters:
+- `type`: "choice"
+- `header`: "Existing Installation"
+- `question`: "AOK is already installed here. What should I do?"
+- `options`:
+  - `label`: "Overwrite (Recommended)", `description`: "Replace all AOK files with the latest version"
+  - `label`: "Skip existing", `description`: "Only install files that don't already exist"
+  - `label`: "Cancel", `description`: "Don't install anything"
+
 
 
 ## Step 3: Run Installation
@@ -152,20 +131,17 @@ ls "$TARGET/skills/aok/SKILL.md" && echo "✓ Skill installed"
 
 ## Step 5: Report Success
 
-```json
-question([{
-  "header": "Installation Complete",
-  "question": "AOK has been installed to {target path}. How would you like the final report delivered?",
-  "multiple": false,
-  "options": [
-    { "label": "Show summary here (Recommended)", "description": "Print the installation summary and next steps in this chat." },
-    { "label": "Write summary to file", "description": "Create a local summary file in the install directory." },
-    { "label": "Both", "description": "Print the summary here and write the summary file." },
-    { "label": "Nothing else — I'm done", "description": "No summary needed." },
-    { "label": "Something else (I'll explain)", "description": "I'll provide details on the format/location." }
-  ]
-}])
-```
+**ACTION REQUIRED:** Invoke the `ask_user` tool with these parameters:
+- `type`: "choice"
+- `header`: "Installation Complete"
+- `question`: "AOK has been installed to {target path}. How would you like the final report delivered?"
+- `options`:
+  - `label`: "Show summary here (Recommended)", `description`: "Print the installation summary and next steps in this chat."
+  - `label`: "Write summary to file", `description`: "Create a local summary file in the install directory."
+  - `label`: "Both", `description`: "Print the summary here and write the summary file."
+  - `label`: "Nothing else — I'm done", `description`: "No summary needed."
+  - `label`: "Something else (I'll explain)", `description`: "I'll provide details on the format/location."
+
 
 Based on selection, output the following summary (and/or write it to `$TARGET/aok-install-summary.md`):
 
@@ -195,6 +171,8 @@ Based on selection, output the following summary (and/or write it to `$TARGET/ao
 </process>
 
 <guardrails>
-- **FATAL ERROR:** You MUST use the exact `question([{...}])` JSON template provided in the steps. Do not modify the JSON structure, and NEVER drop the `[` and `]` brackets around the `options` array. The options property must always be an array.
-- ALWAYS use `question()` format for user interaction — never plain-text questions.
+- **FATAL ERROR:** You MUST use the native `ask_user` tool for questions. DO NOT output `question([{...}])` markdown blocks.
+- **FATAL ERROR:** Outputting a numbered list of questions is strictly forbidden.
+- ALWAYS ask ONE question at a time. Wait for the user to answer before asking the next one.
+- Call the `ask_user` tool silently. Do not print conversational filler.
 </guardrails>

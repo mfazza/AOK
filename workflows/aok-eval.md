@@ -20,35 +20,18 @@ Required files for this workflow:
 - `eval-driven-development.md` — Methodology and rubric design
 </required_reading>
 
-<questioning_format>
-**CRITICAL: ALL questions to the user MUST use the exact `question()` selector format.**
-**NEVER output a numbered list of questions as plain text.**
+<user_interaction_rules>
+**CRITICAL: You MUST use your native `ask_user` tool-calling capability for ALL user interactions.**
+**NEVER output a markdown block with `question([...])`. NEVER output a numbered list of questions as plain text.**
 
 UX Rules:
-- ONLY output the `question([{...}])` block when asking a question. DO NOT prepend conversational text.
-- Ensure the JSON inside `question()` is STRICTLY valid.
-- Users navigate options with **arrow keys** (↑↓) and confirm with **Return**.
+- ALWAYS use the native `ask_user` tool. Do NOT print JSON to the screen. Call the tool silently without conversational preambles.
 - Ask **ONE question at a time** — fully resolve each before moving to the next.
+- For multiple choice, use `type: "choice"`.
 - Options should be OPINIONATED — put the recommended choice first with "(Recommended)".
-- The LAST option is ALWAYS a freeform escape hatch: "Something else (I'll describe)".
-- NEVER ask open-ended questions as plain text — always provide curated options.
-
-**MANDATORY JSON TEMPLATE:**
-When generating a question, you MUST copy this exact structure, including all array brackets `[` and `]`:
-```json
-question([{
-  "header": "Short Title",
-  "question": "The question text?",
-  "multiple": false,
-  "options": [
-    { "label": "Option 1", "description": "Details" },
-    { "label": "Option 2", "description": "Details" },
-    { "label": "Something else (I'll describe)", "description": "Escape hatch" }
-  ]
-}])
-```
-**FATAL ERROR:** Do NOT drop the `[` and `]` brackets around the `options` property. It must always be an array.
-</questioning_format>
+- The LAST option is ALWAYS a freeform escape hatch (e.g. "Something else (I'll describe)").
+- NEVER ask open-ended questions as plain text — always use the `ask_user` tool.
+</user_interaction_rules>
 
 <process>
 
@@ -68,18 +51,16 @@ ls ~/.config/opencode/agents/*.md 2>/dev/null
 
 If `$ARGUMENTS` specifies an agent name AND you can find it, you may skip the selector. Otherwise, **ALWAYS present this selector and STOP until the user responds:**
 
-```json
-question([{
-  "header": "Target Agent",
-  "question": "Which agent do you want to evaluate?",
-  "options": [
-    { "label": "{agent-1} ({location})", "description": "{description from frontmatter}" },
-    { "label": "{agent-2} ({location})", "description": "{description}" },
-    { "label": "{agent-3} ({location})", "description": "{description}" },
-    { "label": "Something else (I'll point you to it)", "description": "An agent file not in these locations" }
-  ]
-}])
-```
+**ACTION REQUIRED:** Invoke the `ask_user` tool with these parameters:
+- `type`: "choice"
+- `header`: "Target Agent"
+- `question`: "Which agent do you want to evaluate?"
+- `options`:
+  - `label`: "{agent-1} ({location})", `description`: "{description from frontmatter}"
+  - `label`: "{agent-2} ({location})", `description`: "{description}"
+  - `label`: "{agent-3} ({location})", `description`: "{description}"
+  - `label`: "Something else (I'll point you to it)", `description`: "An agent file not in these locations"
+
 
 **STOP HERE.** Wait for the user to select before continuing.
 
@@ -109,19 +90,16 @@ Read the agent definition at `.opencode/agents/{agent-name}.md`:
 
 Consult `AOK Reference `eval-taxonomy.md`` to select eval types:
 
-```json
-question([{
-  "header": "Eval Coverage",
-  "question": "Based on this agent, I recommend these eval dimensions. Approve?",
-  "multiple": false,
-  "options": [
-    { "label": "Use all recommended (Recommended)", "description": "{list: Task Completion, Format Compliance, Tool Usage, Scope Adherence, etc.}" },
-    { "label": "Minimal — just core checks", "description": "Task Completion + Format + one robustness test" },
-    { "label": "Comprehensive — maximum coverage", "description": "All recommended + Quality + Adversarial + Integration" },
-    { "label": "Something else (I'll pick)", "description": "Let me choose dimensions" }
-  ]
-}])
-```
+**ACTION REQUIRED:** Invoke the `ask_user` tool with these parameters:
+- `type`: "choice"
+- `header`: "Eval Coverage"
+- `question`: "Based on this agent, I recommend these eval dimensions. Approve?"
+- `options`:
+  - `label`: "Use all recommended (Recommended)", `description`: "{list: Task Completion, Format Compliance, Tool Usage, Scope Adherence, etc.}"
+  - `label`: "Minimal — just core checks", `description`: "Task Completion + Format + one robustness test"
+  - `label`: "Comprehensive — maximum coverage", `description`: "All recommended + Quality + Adversarial + Integration"
+  - `label`: "Something else (I'll pick)", `description`: "Let me choose dimensions"
+
 
 Then generate:
 1. `EVAL-SPEC.md` with dimensions, rubrics, measurement approach
@@ -270,8 +248,8 @@ Include the full table output so results can be compared across runs.
 </eval_principles>
 
 <guardrails>
-- **FATAL ERROR:** The `options` property in the `question([{...}])` JSON MUST be a valid JSON array wrapped in `[` and `]`. Never output options as a raw comma-separated list of objects.
-- **FATAL ERROR:** Outputting a numbered list of questions is strictly forbidden. You must ALWAYS use the `question([{...}])` JSON format for ANY user interaction.
+- **FATAL ERROR:** You MUST use the native `ask_user` tool for questions. DO NOT output `question([{...}])` markdown blocks.
+- **FATAL ERROR:** Outputting a numbered list of questions is strictly forbidden.
 - ALWAYS ask ONE question at a time. Wait for the user to answer before asking the next one.
-- ALWAYS use `question()` format for user interaction - never plain-text questions.
+- Call the `ask_user` tool silently. Do not print conversational filler.
 </guardrails>

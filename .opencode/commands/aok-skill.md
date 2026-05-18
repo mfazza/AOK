@@ -7,35 +7,18 @@ agent: build
 Create or update skills that encode procedural knowledge for agents. Skills are loaded on-demand via opencode's native skill tool — they teach an agent HOW to do something without bloating the system prompt.
 </purpose>
 
-<questioning_format>
-**CRITICAL: ALL questions to the user MUST use the exact `question()` selector format.**
-**NEVER output a numbered list of questions as plain text.**
+<user_interaction_rules>
+**CRITICAL: You MUST use your native `ask_user` tool-calling capability for ALL user interactions.**
+**NEVER output a markdown block with `question([...])`. NEVER output a numbered list of questions as plain text.**
 
 UX Rules:
-- ONLY output the `question([{...}])` block when asking a question. DO NOT prepend conversational text.
-- Ensure the JSON inside `question()` is STRICTLY valid.
-- Users navigate options with **arrow keys** (↑↓) and confirm with **Return**.
+- ALWAYS use the native `ask_user` tool. Do NOT print JSON to the screen. Call the tool silently without conversational preambles.
 - Ask **ONE question at a time** — fully resolve each before moving to the next.
+- For multiple choice, use `type: "choice"`.
 - Options should be OPINIONATED — put the recommended choice first with "(Recommended)".
-- The LAST option is ALWAYS a freeform escape hatch: "Something else (I'll describe)".
-- NEVER ask open-ended questions as plain text — always provide curated options.
-
-**MANDATORY JSON TEMPLATE:**
-When generating a question, you MUST copy this exact structure, including all array brackets `[` and `]`:
-```json
-question([{
-  "header": "Short Title",
-  "question": "The question text?",
-  "multiple": false,
-  "options": [
-    { "label": "Option 1", "description": "Details" },
-    { "label": "Option 2", "description": "Details" },
-    { "label": "Something else (I'll describe)", "description": "Escape hatch" }
-  ]
-}])
-```
-**FATAL ERROR:** Do NOT drop the `[` and `]` brackets around the `options` property. It must always be an array.
-</questioning_format>
+- The LAST option is ALWAYS a freeform escape hatch (e.g. "Something else (I'll describe)").
+- NEVER ask open-ended questions as plain text — always use the `ask_user` tool.
+</user_interaction_rules>
 
 
 <process>
@@ -61,49 +44,40 @@ Display existing skills and exit.
 
 Ask (if not provided in arguments):
 
-```json
-question([{
-  "header": "Skill Type",
-  "question": "What kind of knowledge does this agent need?",
-  "multiple": false,
-  "options": [
-    { "label": "Process/procedure", "description": "Multi-step how-to with decision points" },
-    { "label": "Domain conventions", "description": "Rules, standards, naming patterns for a domain" },
-    { "label": "Reference tables", "description": "Lookup data, API schemas, decision matrices" },
-    { "label": "Templates", "description": "Standard formats for producing specific outputs" },
-    { "label": "Decision tree", "description": "When to choose approach A vs B vs C" },
-    { "label": "Something else (I'll describe)", "description": "Tell me what you have in mind" }
-  ]
-}])
-```
+**ACTION REQUIRED:** Invoke the `ask_user` tool with these parameters:
+- `type`: "choice"
+- `header`: "Skill Type"
+- `question`: "What kind of knowledge does this agent need?"
+- `options`:
+  - `label`: "Process/procedure", `description`: "Multi-step how-to with decision points"
+  - `label`: "Domain conventions", `description`: "Rules, standards, naming patterns for a domain"
+  - `label`: "Reference tables", `description`: "Lookup data, API schemas, decision matrices"
+  - `label`: "Templates", `description`: "Standard formats for producing specific outputs"
+  - `label`: "Decision tree", `description`: "When to choose approach A vs B vs C"
+  - `label`: "Something else (I'll describe)", `description`: "Tell me what you have in mind"
+
 
 Follow up:
-```json
-question([{
-  "header": "Loading",
-  "question": "When should the agent load this knowledge?",
-  "multiple": false,
-  "options": [
-    { "label": "When processing specific file types", "description": "e.g., load when reviewing .ts files" },
-    { "label": "When a keyword/topic appears", "description": "e.g., load when user mentions 'security'" },
-    { "label": "When a specific tool is about to be used", "description": "e.g., load before running deploy" },
-    { "label": "On every invocation", "description": "Always needed — consider putting in prompt instead" },
-    { "label": "Something else (I'll describe)", "description": "Tell me what you have in mind" }
-  ]
-}])
-```
+**ACTION REQUIRED:** Invoke the `ask_user` tool with these parameters:
+- `type`: "choice"
+- `header`: "Loading"
+- `question`: "When should the agent load this knowledge?"
+- `options`:
+  - `label`: "When processing specific file types", `description`: "e.g., load when reviewing .ts files"
+  - `label`: "When a keyword/topic appears", `description`: "e.g., load when user mentions 'security'"
+  - `label`: "When a specific tool is about to be used", `description`: "e.g., load before running deploy"
+  - `label`: "On every invocation", `description`: "Always needed — consider putting in prompt instead"
+  - `label`: "Something else (I'll describe)", `description`: "Tell me what you have in mind"
 
-```json
-question([{
-  "header": "Scripts & Hooks",
-  "question": "Does this skill require executable scripts (e.g., bash/node scripts or pre/post hooks)?",
-  "multiple": false,
-  "options": [
-    { "label": "No (Recommended)", "description": "Just procedural documentation and references" },
-    { "label": "Yes", "description": "I need a scripts/ directory for executable logic" }
-  ]
-}])
-```
+
+**ACTION REQUIRED:** Invoke the `ask_user` tool with these parameters:
+- `type`: "choice"
+- `header`: "Scripts & Hooks"
+- `question`: "Does this skill require executable scripts (e.g., bash/node scripts or pre/post hooks)?"
+- `options`:
+  - `label`: "No (Recommended)", `description`: "Just procedural documentation and references"
+  - `label`: "Yes", `description`: "I need a scripts/ directory for executable logic"
+
 
 ## Step 3: Design the Skill
 
@@ -214,8 +188,8 @@ The agent can now load this skill on-demand when {trigger condition}.
 </knowledge_routing>
 
 <guardrails>
-- **FATAL ERROR:** The `options` property in the `question([{...}])` JSON MUST be a valid JSON array wrapped in `[` and `]`. Never output options as a raw comma-separated list of objects.
-- **FATAL ERROR:** Outputting a numbered list of questions is strictly forbidden. You must ALWAYS use the `question([{...}])` JSON format for ANY user interaction.
+- **FATAL ERROR:** You MUST use the native `ask_user` tool for questions. DO NOT output `question([{...}])` markdown blocks.
+- **FATAL ERROR:** Outputting a numbered list of questions is strictly forbidden.
 - ALWAYS ask ONE question at a time. Wait for the user to answer before asking the next one.
-- ALWAYS use `question()` format for user interaction - never plain-text questions.
+- Call the `ask_user` tool silently. Do not print conversational filler.
 </guardrails>
