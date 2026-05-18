@@ -12,8 +12,8 @@ Create or modify custom tools that add determinism to an agent's workflow. Tools
 
 UX Rules:
 - ONLY output the `question([{...}])` block when asking a question. DO NOT prepend conversational text.
-- Ensure the JSON inside `question()` is STRICTLY valid. The `options` property MUST be a valid JSON array enclosed in `[` and `]`.
-- Users navigate options with **arrow keys** (↑↓) and confirm with **Return**
+- Ensure the JSON inside `question()` is STRICTLY valid. **CRITICAL:** The `options` property MUST be a valid JSON array enclosed in `[` and `]`. Do not drop the array brackets!
+- Users navigate options with **arrow keys** (↑↓) and confirm with **Return**. If `multiSelect` is true, they select/deselect with **Space** and confirm with **Return**.
 - Ask **ONE question at a time** — fully resolve each before moving to the next
 - Options should be OPINIONATED — put the recommended choice first with "(Recommended)"
 - The LAST option is ALWAYS a freeform escape hatch: "Something else (I'll describe)"
@@ -59,34 +59,34 @@ Which agent needs a new tool? (agent name)
 
 If a description was provided, use it. Otherwise, ask:
 
-```
+```json
 question([{
-  header: "Tool Purpose",
-  question: "What step should this tool make deterministic?",
-  multiSelect: false,
-  options: [
-    { label: "Input validation", description: "Check if inputs match expected schema before processing" },
-    { label: "Data parsing", description: "Extract structured data from raw text/files" },
-    { label: "Output formatting", description: "Always produce output in exact structure" },
-    { label: "External query", description: "Call an API or system and return structured results" },
-    { label: "File operations", description: "Read/write specific file formats deterministically" },
-    { label: "Something else (I'll describe)", description: "Tell me what you have in mind" }
+  "header": "Tool Purpose",
+  "question": "What step should this tool make deterministic?",
+  "multiSelect": false,
+  "options": [
+    { "label": "Input validation", "description": "Check if inputs match expected schema before processing" },
+    { "label": "Data parsing", "description": "Extract structured data from raw text/files" },
+    { "label": "Output formatting", "description": "Always produce output in exact structure" },
+    { "label": "External query", "description": "Call an API or system and return structured results" },
+    { "label": "File operations", "description": "Read/write specific file formats deterministically" },
+    { "label": "Something else (I'll describe)", "description": "Tell me what you have in mind" }
   ]
 }])
 ```
 
 Follow up with:
-```
+```json
 question([{
-  header: "Tool Inputs",
-  question: "What does the tool receive?",
-  multiSelect: false,
-  options: [
-    { label: "A string (text, path, query)", description: "Single text input" },
-    { label: "Multiple strings", description: "Several text parameters" },
-    { label: "A string + options", description: "Text input with configuration flags" },
-    { label: "Structured data (JSON)", description: "Complex nested input" },
-    { label: "Something else (I'll describe)", description: "Tell me what you have in mind" }
+  "header": "Tool Inputs",
+  "question": "What does the tool receive?",
+  "multiSelect": false,
+  "options": [
+    { "label": "A string (text, path, query)", "description": "Single text input" },
+    { "label": "Multiple strings", "description": "Several text parameters" },
+    { "label": "A string + options", "description": "Text input with configuration flags" },
+    { "label": "Structured data (JSON)", "description": "Complex nested input" },
+    { "label": "Something else (I'll describe)", "description": "Tell me what you have in mind" }
   ]
 }])
 ```
@@ -118,7 +118,7 @@ Create `.opencode/tools/{agent-name}-{tool-name}.ts`:
 import { tool } from "@opencode-ai/plugin"
 
 export default tool({
-  description: "{description}",
+  "description": "{description}",
   args: {
     // Typed args with Zod schemas
   },
@@ -173,7 +173,7 @@ Run `/aok-eval {agent-name}` to verify the tool improves reliability.
 import { tool } from "@opencode-ai/plugin"
 
 export default tool({
-  description: "Validate {thing} against {schema}",
+  "description": "Validate {thing} against {schema}",
   args: {
     input: tool.schema.string().describe("The {thing} to validate"),
   },
@@ -195,7 +195,7 @@ import fs from "fs/promises"
 import path from "path"
 
 export default tool({
-  description: "Parse {format} file and extract {data}",
+  "description": "Parse {format} file and extract {data}",
   args: {
     filePath: tool.schema.string().describe("Path to the file"),
   },
@@ -213,7 +213,7 @@ export default tool({
 import { tool } from "@opencode-ai/plugin"
 
 export default tool({
-  description: "Run {command} and return structured results",
+  "description": "Run {command} and return structured results",
   args: {
     target: tool.schema.string().describe("What to {action}"),
   },

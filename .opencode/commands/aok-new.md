@@ -21,8 +21,8 @@ Read these before generating:
 
 UX Rules:
 - ONLY output the `question([{...}])` block when asking a question. DO NOT prepend conversational text.
-- Ensure the JSON inside `question()` is STRICTLY valid. The `options` property MUST be a valid JSON array enclosed in `[` and `]`.
-- Users navigate options with **arrow keys** (↑↓) and confirm with **Return**
+- Ensure the JSON inside `question()` is STRICTLY valid. **CRITICAL:** The `options` property MUST be a valid JSON array enclosed in `[` and `]`. Do not drop the array brackets!
+- Users navigate options with **arrow keys** (↑↓) and confirm with **Return**. If `multiSelect` is true, they select/deselect with **Space** and confirm with **Return**.
 - Ask **ONE question at a time** — fully resolve each before moving to the next
 - Options should be OPINIONATED — put the recommended choice first with "(Recommended)"
 - The LAST option is ALWAYS a freeform escape hatch: "Something else (I'll describe)"
@@ -147,17 +147,17 @@ If the description clearly involves judgment, decision-making, creative output, 
 If `$ARGUMENTS` contains a description, use it as the starting point and skip to Step 2.
 
 Otherwise:
-```
+```json
 question([{
-  header: "🤖 Agent Operator Kit",
-  question: "What kind of agent do you want to create?",
-  multiSelect: false,
-  options: [
-    { label: "Code reviewer", description: "Analyzes code for bugs, security, quality" },
-    { label: "Task automator", description: "Executes repeatable workflows (deploy, release, test)" },
-    { label: "Knowledge assistant", description: "Answers questions using domain expertise" },
-    { label: "Orchestrator", description: "Coordinates multiple agents/steps in a pipeline" },
-    { label: "Something else (I'll describe)", description: "Tell me what you have in mind" }
+  "header": "🤖 Agent Operator Kit",
+  "question": "What kind of agent do you want to create?",
+  "multiSelect": false,
+  "options": [
+    { "label": "Code reviewer", "description": "Analyzes code for bugs, security, quality" },
+    { "label": "Task automator", "description": "Executes repeatable workflows (deploy, release, test)" },
+    { "label": "Knowledge assistant", "description": "Answers questions using domain expertise" },
+    { "label": "Orchestrator", "description": "Coordinates multiple agents/steps in a pipeline" },
+    { "label": "Something else (I'll describe)", "description": "Tell me what you have in mind" }
   ]
 }])
 ```
@@ -167,82 +167,82 @@ question([{
 Ask questions ONE AT A TIME using `question()` format. Stop when you have enough to proceed.
 
 **Question 1: Scope & Task**
-```
+```json
 question([{
-  header: "Scope",
-  question: "What's the primary task this agent performs?",
-  multiSelect: false,
-  options: [
+  "header": "Scope",
+  "question": "What's the primary task this agent performs?",
+  "multiSelect": false,
+  "options": [
     // Generate 3-4 opinionated options BASED ON the agent type selected in Step 1
-    { label: "{most likely task}", description: "{tradeoff}" },
-    { label: "{second most likely}", description: "{tradeoff}" },
-    { label: "{third option}", description: "{tradeoff}" },
-    { label: "Something else (I'll describe)", description: "Tell me what you have in mind" }
+    { "label": "{most likely task}", "description": "{tradeoff}" },
+    { "label": "{second most likely}", "description": "{tradeoff}" },
+    { "label": "{third option}", "description": "{tradeoff}" },
+    { "label": "Something else (I'll describe)", "description": "Tell me what you have in mind" }
   ]
 }])
 ```
 
 **Question 2: Output Format**
-```
+```json
 question([{
-  header: "Output",
-  question: "What should the agent produce?",
-  multiSelect: false,
-  options: [
-    { label: "{most natural output for this agent type}", description: "{details}" },
-    { label: "{alternative format}", description: "{details}" },
-    { label: "{minimal format}", description: "{details}" },
-    { label: "Something else (I'll describe)", description: "Tell me what you have in mind" }
+  "header": "Output",
+  "question": "What should the agent produce?",
+  "multiSelect": false,
+  "options": [
+    { "label": "{most natural output for this agent type}", "description": "{details}" },
+    { "label": "{alternative format}", "description": "{details}" },
+    { "label": "{minimal format}", "description": "{details}" },
+    { "label": "Something else (I'll describe)", "description": "Tell me what you have in mind" }
   ]
 }])
 ```
 
 **Question 3: Reliability Needs**
-```
+```json
 question([{
-  header: "Determinism",
-  question: "Are there steps that MUST work the same way every time?",
-  multiSelect: true,
-  options: [
-    { label: "Input validation", description: "Check inputs before processing → becomes a tool" },
-    { label: "Output formatting", description: "Always produce exact structure → becomes a tool" },
-    { label: "Data parsing", description: "Extract info from files/APIs → becomes a tool" },
-    { label: "External calls", description: "Always query specific systems → becomes a tool" },
-    { label: "None needed", description: "LLM judgment is fine for all steps" },
-    { label: "Something else (I'll describe)", description: "Tell me what you have in mind" }
+  "header": "Determinism",
+  "question": "Are there steps that MUST work the same way every time?",
+  "multiSelect": true,
+  "options": [
+    { "label": "Input validation", "description": "Check inputs before processing → becomes a tool" },
+    { "label": "Output formatting", "description": "Always produce exact structure → becomes a tool" },
+    { "label": "Data parsing", "description": "Extract info from files/APIs → becomes a tool" },
+    { "label": "External calls", "description": "Always query specific systems → becomes a tool" },
+    { "label": "None needed", "description": "LLM judgment is fine for all steps" },
+    { "label": "Something else (I'll describe)", "description": "Tell me what you have in mind" }
   ]
 }])
 ```
 
 **Question 4: Knowledge Needs (ask only if relevant)**
-```
+```json
 question([{
-  header: "Knowledge",
-  question: "Does this agent need specialized knowledge it should load on-demand?",
-  multiSelect: true,
-  options: [
-    { label: "Domain conventions", description: "Coding standards, naming rules, format rules → skill" },
-    { label: "Process documentation", description: "Multi-step procedures, decision trees → skill" },
-    { label: "Reference tables", description: "Lookup data, API docs, schema refs → skill" },
-    { label: "None needed", description: "Core prompt is sufficient" },
-    { label: "Something else (I'll describe)", description: "Tell me what you have in mind" }
+  "header": "Knowledge",
+  "question": "Does this agent need specialized knowledge it should load on-demand?",
+  "multiSelect": true,
+  "options": [
+    { "label": "Domain conventions", "description": "Coding standards, naming rules, format rules → skill" },
+    { "label": "Process documentation", "description": "Multi-step procedures, decision trees → skill" },
+    { "label": "Reference tables", "description": "Lookup data, API docs, schema refs → skill" },
+    { "label": "None needed", "description": "Core prompt is sufficient" },
+    { "label": "Something else (I'll describe)", "description": "Tell me what you have in mind" }
   ]
 }])
 ```
 
 **Question 5: Quality Bar (always ask)**
-```
+```json
 question([{
-  header: "Quality",
-  question: "What matters most for this agent's quality?",
-  multiSelect: true,
-  options: [
-    { label: "Correctness", description: "Outputs must be factually accurate" },
-    { label: "Completeness", description: "Must cover all aspects, no gaps" },
-    { label: "Format consistency", description: "Must always produce same structure" },
-    { label: "Safety/boundaries", description: "Must stay in scope, refuse dangerous ops" },
-    { label: "Speed/conciseness", description: "Must be fast and not verbose" },
-    { label: "Something else (I'll describe)", description: "Tell me what you have in mind" }
+  "header": "Quality",
+  "question": "What matters most for this agent's quality?",
+  "multiSelect": true,
+  "options": [
+    { "label": "Correctness", "description": "Outputs must be factually accurate" },
+    { "label": "Completeness", "description": "Must cover all aspects, no gaps" },
+    { "label": "Format consistency", "description": "Must always produce same structure" },
+    { "label": "Safety/boundaries", "description": "Must stay in scope, refuse dangerous ops" },
+    { "label": "Speed/conciseness", "description": "Must be fast and not verbose" },
+    { "label": "Something else (I'll describe)", "description": "Tell me what you have in mind" }
   ]
 }])
 ```
@@ -256,20 +256,20 @@ question([{
 
 After enough context, present a summary for confirmation:
 
-```
+```json
 question([{
-  header: "✅ Agent Design",
-  question: "Here's what I'll build. Look right?",
-  multiSelect: false,
-  options: [
-    { label: "Yes, generate it", description: "Create all artifacts now" },
-    { label: "Adjust something", description: "Let me refine a detail" },
-    { label: "Start over", description: "I want to rethink the approach" }
+  "header": "✅ Agent Design",
+  "question": "Here's what I'll build. Look right?",
+  "multiSelect": false,
+  "options": [
+    { "label": "Yes, generate it", "description": "Create all artifacts now" },
+    { "label": "Adjust something", "description": "Let me refine a detail" },
+    { "label": "Start over", "description": "I want to rethink the approach" }
   ]
 }])
 ```
 
-Display the summary ABOVE the question:
+Display the summary ABOVE the "question":
 ```
 ## Agent Design Summary
 
@@ -321,7 +321,7 @@ For each deterministic step identified in the interview, create a tool at `.open
 import { tool } from "@opencode-ai/plugin"
 
 export default tool({
-  description: "{what this tool does}",
+  "description": "{what this tool does}",
   args: {
     // Typed arguments with descriptions
   },
