@@ -10,8 +10,14 @@ Works with any agent — AOK-created or not.
 </purpose>
 
 <required_reading>
-- `references/eval-taxonomy.md` — Test types and selection
-- `references/eval-driven-development.md` — Scoring methodology
+Locate and read the AOK reference files before proceeding. Check the following locations (in order):
+1. `.opencode/skills/aok/references/` (Project-local install)
+2. `~/.config/opencode/skills/aok/references/` (Global install)
+3. `./references/` (AOK Dev mode)
+
+Required files for this workflow:
+- `eval-taxonomy.md` — Test types and selection
+- `eval-driven-development.md` — Scoring methodology
 </required_reading>
 
 <questioning_format>

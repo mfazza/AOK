@@ -10,8 +10,14 @@ This is the universal quality gate for agents.
 </purpose>
 
 <required_reading>
-- `references/eval-taxonomy.md` — Eval type catalog and selection matrix
-- `references/eval-driven-development.md` — Methodology and rubric design
+Locate and read the AOK reference files before proceeding. Check the following locations (in order):
+1. `.opencode/skills/aok/references/` (Project-local install)
+2. `~/.config/opencode/skills/aok/references/` (Global install)
+3. `./references/` (AOK Dev mode)
+
+Required files for this workflow:
+- `eval-taxonomy.md` — Eval type catalog and selection matrix
+- `eval-driven-development.md` — Methodology and rubric design
 </required_reading>
 
 <questioning_format>
@@ -99,7 +105,7 @@ Read the agent definition at `.opencode/agents/{agent-name}.md`:
 - Extract: purpose, tools used, model, permissions, output format
 - Identify: what the agent does, what quality means for it
 
-Consult `references/eval-taxonomy.md` to select eval types:
+Consult `AOK Reference `eval-taxonomy.md`` to select eval types:
 
 ```json
 question([{

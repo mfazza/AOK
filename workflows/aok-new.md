@@ -10,10 +10,15 @@ The workflow: understand → design → generate → scaffold evals → end-to-e
 </purpose>
 
 <required_reading>
-Read these before generating:
-- `references/eval-taxonomy.md` — Catalog of eval types (select relevant ones per agent)
-- `references/agent-design-patterns.md` — Architecture patterns
-- `references/tool-cookbook.md` — Tool templates
+Locate and read the AOK reference files before proceeding. Check the following locations (in order):
+1. `.opencode/skills/aok/references/` (Project-local install)
+2. `~/.config/opencode/skills/aok/references/` (Global install)
+3. `./references/` (AOK Dev mode)
+
+Required files for this workflow:
+- `eval-taxonomy.md` — Catalog of eval types (select relevant ones per agent)
+- `agent-design-patterns.md` — Architecture patterns
+- `tool-cookbook.md` — Tool templates
 </required_reading>
 
 <questioning_format>
@@ -387,7 +392,7 @@ subtask: {true if subagent}
 
 ## Step 7: Generate Eval Suite
 
-**Consult `references/eval-taxonomy.md`** to select the most relevant eval types for this agent.
+**Consult the `eval-taxonomy.md` AOK reference** to select the most relevant eval types for this agent.
 
 ### 7a: Select Eval Dimensions
 
@@ -542,7 +547,7 @@ Present the final report with tables:
 - Tools should add DETERMINISM, not just wrap shell commands
 - Skills should encode PROCEDURAL KNOWLEDGE, not just reference docs
 - Agent prompts should be SPECIFIC and ACTIONABLE, not vague
-- Consult `references/eval-taxonomy.md` to select eval dimensions — don't guess
+- Consult the `eval-taxonomy.md` AOK reference to select eval dimensions — don't guess
 - If the agent is trivial (no tools, no skills needed), still generate evals and E2E test
 </guardrails>
 

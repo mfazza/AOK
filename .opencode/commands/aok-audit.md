@@ -14,9 +14,15 @@ Works on ANY agent — AOK-created or not. Produces actionable findings with fix
 </purpose>
 
 <required_reading>
-- `references/agent-design-patterns.md` — Tool/skill design principles
-- `references/tool-cookbook.md` — What kinds of things can become tools
-- `references/eval-taxonomy.md` — Test types for verifying fixes
+Locate and read the AOK reference files before proceeding. Check the following locations (in order):
+1. `.opencode/skills/aok/references/` (Project-local install)
+2. `~/.config/opencode/skills/aok/references/` (Global install)
+3. `./references/` (AOK Dev mode)
+
+Required files for this workflow:
+- `agent-design-patterns.md` — Tool/skill design principles
+- `tool-cookbook.md` — What kinds of things can become tools
+- `eval-taxonomy.md` — Test types for verifying fixes
 </required_reading>
 
 <questioning_format>
