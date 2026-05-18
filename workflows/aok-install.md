@@ -25,7 +25,7 @@ Example:
 question([{
   "header": "Agent Mode",
   "question": "How should this agent be used?",
-  "multiSelect": false,
+  "multiple": false,
   "options": [
     { "label": "Subagent (Recommended)", "description": "Invoked by other agents or via @mention — focused, scoped task" },
     { "label": "Primary agent", "description": "Main assistant you interact with directly — replaces Build/Plan" },
@@ -150,7 +150,7 @@ ls "$TARGET/skills/aok/SKILL.md" && echo "✓ Skill installed"
 question([{
   "header": "Installation Complete",
   "question": "AOK has been installed to {target path}. How would you like the final report delivered?",
-  "multiSelect": false,
+  "multiple": false,
   "options": [
     { "label": "Show summary here (Recommended)", "description": "Print the installation summary and next steps in this chat." },
     { "label": "Write summary to file", "description": "Create a local summary file in the install directory." },

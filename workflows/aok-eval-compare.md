@@ -32,7 +32,7 @@ Example:
 question([{
   "header": "Agent Mode",
   "question": "How should this agent be used?",
-  "multiSelect": false,
+  "multiple": false,
   "options": [
     { "label": "Subagent (Recommended)", "description": "Invoked by other agents or via @mention — focused, scoped task" },
     { "label": "Primary agent", "description": "Main assistant you interact with directly — replaces Build/Plan" },
@@ -53,7 +53,7 @@ Parse `$ARGUMENTS` for the agent name. If empty, prompt:
 question([{
   "header": "Target Agent",
   "question": "Which agent do you want to compare across models?",
-  "multiSelect": false,
+  "multiple": false,
   "options": [
     { "label": "{agent-1}", "description": "{description}" },
     { "label": "{agent-2}", "description": "{description}" },
@@ -78,7 +78,7 @@ Then execute the aok-eval flow (Step 3 from that workflow) to scaffold evals bef
 question([{
   "header": "Model Selection",
   "question": "Which models do you want to compare?",
-  "multiSelect": true,
+  "multiple": true,
   "options": [
     { "label": "claude-sonnet-4-20250514 (Recommended)", "description": "Best balance of quality and speed for most agents" },
     { "label": "claude-opus-4-20250514", "description": "Highest quality — slower and more expensive" },
@@ -201,7 +201,7 @@ Include all tables and findings for historical reference.
 question([{
   "header": "Next Steps",
   "question": "What would you like to do with these results?",
-  "multiSelect": false,
+  "multiple": false,
   "options": [
     { "label": "Switch agent to recommended model (Recommended)", "description": "Update the agent's model setting to {best-model}" },
     { "label": "Iterate on failures", "description": "Fix issues found across models with /aok-iterate" },

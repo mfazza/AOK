@@ -25,7 +25,7 @@ Example:
 question([{
   "header": "Agent Mode",
   "question": "How should this agent be used?",
-  "multiSelect": false,
+  "multiple": false,
   "options": [
     { "label": "Subagent (Recommended)", "description": "Invoked by other agents or via @mention — focused, scoped task" },
     { "label": "Primary agent", "description": "Main assistant you interact with directly — replaces Build/Plan" },
@@ -93,7 +93,7 @@ Then ask:
 question([{
   "header": "Apply Changes",
   "question": "How should I proceed?",
-  "multiSelect": false,
+  "multiple": false,
   "options": [
     { "label": "Apply all changes (Recommended)", "description": "Fix all {N} issues in priority order" },
     { "label": "Apply one at a time", "description": "Apply highest-priority fix, re-eval, then decide" },

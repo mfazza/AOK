@@ -36,7 +36,7 @@ Example:
 question([{
   "header": "Agent Mode",
   "question": "How should this agent be used?",
-  "multiSelect": false,
+  "multiple": false,
   "options": [
     { "label": "Subagent (Recommended)", "description": "Invoked by other agents or via @mention — focused, scoped task" },
     { "label": "Primary agent", "description": "Main assistant you interact with directly — replaces Build/Plan" },
@@ -52,7 +52,7 @@ If the user selects "Orchestrator", ask a follow-up question to define its subag
 question([{
   "header": "Context Firewalls",
   "question": "Orchestrators use specialized subagents as 'context firewalls' to delegate reading and keep their own context clean. What subagents does this orchestrator need?",
-  "multiSelect": true,
+  "multiple": true,
   "options": [
     { "label": "Security Reviewer", "description": "Reads code and returns security findings only" },
     { "label": "Performance Reviewer", "description": "Reads code and returns performance findings only" },
@@ -91,7 +91,7 @@ Analyze `$ARGUMENTS` (or the initial description) against these criteria:
 question([{
   "header": "💡 Routing Recommendation",
   "question": "What you're describing sounds like a tool (deterministic code), not an agent. Tools are faster, cheaper, and more reliable for this. How should I proceed?",
-  "multiSelect": false,
+  "multiple": false,
   "options": [
     { "label": "Create it as a tool (Recommended)", "description": "Deterministic TypeScript tool — no LLM needed, always consistent" },
     { "label": "Create it as a tool + agent wrapper", "description": "Tool for the logic, thin agent that invokes it with context" },
@@ -109,7 +109,7 @@ If the user confirms "tool", run `/aok-tools` instead (pass the context forward)
 question([{
   "header": "💡 Routing Recommendation",
   "question": "What you're describing sounds like procedural knowledge — a skill that agents can load when needed. Skills are for conditional, on-demand workflows.",
-  "multiSelect": false,
+  "multiple": false,
   "options": [
     { "label": "Create it as a skill (Recommended)", "description": "SKILL.md with procedural knowledge — loadable by any agent" },
     { "label": "Create a skill + dedicated agent", "description": "Skill for the knowledge, agent that applies it to tasks" },
@@ -127,7 +127,7 @@ If the user confirms "skill", run `/aok-skill` instead (pass the context forward
 question([{
   "header": "💡 Routing Recommendation",
   "question": "What you're describing sounds like global repo context (e.g., universal best practices or tech stack rules), not a specific agent or skill.",
-  "multiSelect": false,
+  "multiple": false,
   "options": [
     { "label": "Add to root context file (Recommended)", "description": "Write these rules to a root GEMINI.md or AGENTS.md file" },
     { "label": "I still want a skill/agent", "description": "I'll explain why this shouldn't be global" },
@@ -151,7 +151,7 @@ Otherwise:
 question([{
   "header": "🤖 Agent Operator Kit",
   "question": "What kind of agent do you want to create?",
-  "multiSelect": false,
+  "multiple": false,
   "options": [
     { "label": "Code reviewer", "description": "Analyzes code for bugs, security, quality" },
     { "label": "Task automator", "description": "Executes repeatable workflows (deploy, release, test)" },
@@ -172,7 +172,7 @@ Ask questions ONE AT A TIME using `question()` format. Stop when you have enough
 question([{
   "header": "Scope",
   "question": "What's the primary task this agent performs?",
-  "multiSelect": false,
+  "multiple": false,
   "options": [
     // Generate 3-4 opinionated options BASED ON the agent type selected in Step 1
     { "label": "{most likely task}", "description": "{tradeoff}" },
@@ -188,7 +188,7 @@ question([{
 question([{
   "header": "Output",
   "question": "What should the agent produce?",
-  "multiSelect": false,
+  "multiple": false,
   "options": [
     { "label": "{most natural output for this agent type}", "description": "{details}" },
     { "label": "{alternative format}", "description": "{details}" },
@@ -203,7 +203,7 @@ question([{
 question([{
   "header": "Determinism",
   "question": "Which parts of this workflow should use strict code (Tools) instead of LLM judgment?",
-  "multiSelect": true,
+  "multiple": true,
   "options": [
     { "label": "{Specific recommendation based on context}", "description": "Recommended because {brief technical reason}." },
     { "label": "Input validation", "description": "Verify schemas, existence of files, or credentials" },
@@ -220,8 +220,9 @@ question([{
 question([{
   "header": "Knowledge",
   "question": "What kind of specialized knowledge does this agent need to reference?",
-  "multiSelect": true,
+  "multiple": true,
   "options": [
+    // IMPORTANT: Contextually evaluate the agent design and append "(Recommended)" to the single most appropriate label below.
     { "label": "Procedural (new skill)", "description": "Step-by-step procedures or decision trees → creates a SKILL" },
     { "label": "Domain conventions (new skill)", "description": "Specific naming rules or format rules → creates a SKILL" },
     { "label": "Global rules (repo-level)", "description": "Universal rules via AGENTS.md or opencode/rules/" },
@@ -237,7 +238,7 @@ question([{
 question([{
   "header": "Quality",
   "question": "Which quality dimensions are critical for this agent?",
-  "multiSelect": true,
+  "multiple": true,
   "options": [
     { "label": "Correctness", "description": "Outputs must be factually accurate" },
     { "label": "Completeness", "description": "Must cover all aspects, no gaps" },
@@ -262,7 +263,7 @@ After enough context, present a summary for confirmation:
 question([{
   "header": "✅ Agent Design",
   "question": "Here's what I'll build. Look right?",
-  "multiSelect": false,
+  "multiple": false,
   "options": [
     { "label": "Yes, generate it", "description": "Create all artifacts now" },
     { "label": "Adjust something", "description": "Let me refine a detail" },

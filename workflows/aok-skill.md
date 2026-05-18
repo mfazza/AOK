@@ -25,7 +25,7 @@ Example:
 question([{
   "header": "Agent Mode",
   "question": "How should this agent be used?",
-  "multiSelect": false,
+  "multiple": false,
   "options": [
     { "label": "Subagent (Recommended)", "description": "Invoked by other agents or via @mention — focused, scoped task" },
     { "label": "Primary agent", "description": "Main assistant you interact with directly — replaces Build/Plan" },
@@ -63,7 +63,7 @@ Ask (if not provided in arguments):
 question([{
   "header": "Skill Type",
   "question": "What kind of knowledge does this agent need?",
-  "multiSelect": false,
+  "multiple": false,
   "options": [
     { "label": "Process/procedure", "description": "Multi-step how-to with decision points" },
     { "label": "Domain conventions", "description": "Rules, standards, naming patterns for a domain" },
@@ -80,7 +80,7 @@ Follow up:
 question([{
   "header": "Loading",
   "question": "When should the agent load this knowledge?",
-  "multiSelect": false,
+  "multiple": false,
   "options": [
     { "label": "When processing specific file types", "description": "e.g., load when reviewing .ts files" },
     { "label": "When a keyword/topic appears", "description": "e.g., load when user mentions 'security'" },
@@ -95,7 +95,7 @@ question([{
 question([{
   "header": "Scripts & Hooks",
   "question": "Does this skill require executable scripts (e.g., bash/node scripts or pre/post hooks)?",
-  "multiSelect": false,
+  "multiple": false,
   "options": [
     { "label": "No (Recommended)", "description": "Just procedural documentation and references" },
     { "label": "Yes", "description": "I need a scripts/ directory for executable logic" }

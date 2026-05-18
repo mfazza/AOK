@@ -37,7 +37,7 @@ Example:
 question([{
   "header": "Agent Mode",
   "question": "How should this agent be used?",
-  "multiSelect": false,
+  "multiple": false,
   "options": [
     { "label": "Subagent (Recommended)", "description": "Invoked by other agents or via @mention — focused, scoped task" },
     { "label": "Primary agent", "description": "Main assistant you interact with directly — replaces Build/Plan" },
@@ -245,7 +245,7 @@ Output as structured tables:
 question([{
   "header": "Apply Fixes",
   "question": "How would you like to address these findings?",
-  "multiSelect": false,
+  "multiple": false,
   "options": [
     { "label": "Fix critical issues only (Recommended)", "description": "Address injection surfaces and high-impact token waste" },
     { "label": "Fix all — create tools for determinism gaps", "description": "Full refactor: new tools + prompt rewrite + guardrails" },

@@ -32,7 +32,7 @@ Example:
 question([{
   "header": "Agent Mode",
   "question": "How should this agent be used?",
-  "multiSelect": false,
+  "multiple": false,
   "options": [
     { "label": "Subagent (Recommended)", "description": "Invoked by other agents or via @mention — focused, scoped task" },
     { "label": "Primary agent", "description": "Main assistant you interact with directly — replaces Build/Plan" },
@@ -105,7 +105,7 @@ Consult `references/eval-taxonomy.md` to select eval types:
 question([{
   "header": "Eval Coverage",
   "question": "Based on this agent, I recommend these eval dimensions. Approve?",
-  "multiSelect": false,
+  "multiple": false,
   "options": [
     { "label": "Use all recommended (Recommended)", "description": "{list: Task Completion, Format Compliance, Tool Usage, Scope Adherence, etc.}" },
     { "label": "Minimal — just core checks", "description": "Task Completion + Format + one robustness test" },

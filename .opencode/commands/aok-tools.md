@@ -25,7 +25,7 @@ Example:
 question([{
   "header": "Agent Mode",
   "question": "How should this agent be used?",
-  "multiSelect": false,
+  "multiple": false,
   "options": [
     { "label": "Subagent (Recommended)", "description": "Invoked by other agents or via @mention — focused, scoped task" },
     { "label": "Primary agent", "description": "Main assistant you interact with directly — replaces Build/Plan" },
@@ -63,7 +63,7 @@ If a description was provided, use it. Otherwise, ask:
 question([{
   "header": "Tool Purpose",
   "question": "What step should this tool make deterministic?",
-  "multiSelect": false,
+  "multiple": false,
   "options": [
     { "label": "Input validation", "description": "Check if inputs match expected schema before processing" },
     { "label": "Data parsing", "description": "Extract structured data from raw text/files" },
@@ -80,7 +80,7 @@ Follow up with:
 question([{
   "header": "Tool Inputs",
   "question": "What does the tool receive?",
-  "multiSelect": false,
+  "multiple": false,
   "options": [
     { "label": "A string (text, path, query)", "description": "Single text input" },
     { "label": "Multiple strings", "description": "Several text parameters" },
