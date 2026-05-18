@@ -30,7 +30,8 @@ question([{
   "header": "Deletion",
   "question": "Which agent do you want to delete?",
   "type": "text",
-  "placeholder": "e.g., my-agent"
+  "placeholder": "e.g., my-agent",
+  "options": []
 }])
 ```
 
