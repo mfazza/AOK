@@ -194,19 +194,19 @@ The agent can now load this skill on-demand when {trigger condition}.
 </skill_design_principles>
 
 <knowledge_routing>
-**Put in Global Context (AGENTS.md / GEMINI.md) when:**
-- The knowledge dictates universal best practices or tech stack rules
+**Put in Global Context (AGENTS.md / GEMINI.md) when (Reference Knowledge):**
 - The rule applies repo-wide
+- It dictates universal best practices or tech stack choices
 - Every agent and developer needs to know it implicitly
 
-**Put in the SKILL when:**
-- Knowledge is procedural (how-to) rather than behavioral (who I am)
-- Knowledge is only needed *conditionally* (on-demand)
-- Knowledge consists of reference tables, API schemas, or decision trees
-- Knowledge applies to multiple agents, but NOT repo-wide
+**Create a SKILL when (Procedural Knowledge):**
+- There's a multi-step process the agent needs to follow conditionally
+- Explicit heuristics, decision trees, or troubleshooting steps are needed conditionally
+- There are reference tables, API schemas, or lookup data that should only be fetched on-demand (never core behavior)
+- The knowledge applies to multiple agents or contexts but isn't repo-wide
 
-**Put in the PROMPT when:**
-- Knowledge describes core identity and behavioral rules (always needed)
-- Knowledge defines how the agent thinks or acts on every invocation
-- Knowledge is specific to this agent only
+**Keep in the PROMPT when (Behavioral Knowledge):**
+- The instructions describe core identity and behavioral rules (always needed)
+- The instructions define *how* the agent thinks or acts on every invocation
+- The knowledge is concise and essential for its baseline task
 </knowledge_routing>

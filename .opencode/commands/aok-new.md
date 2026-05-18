@@ -556,18 +556,18 @@ Present the final report with tables:
 </tool_decision_framework>
 
 <knowledge_routing>
-**Put in Global Context (AGENTS.md / GEMINI.md) when:**
+**Put in Global Context (AGENTS.md / GEMINI.md) when (Reference Knowledge):**
 - The rule applies repo-wide
 - It dictates universal best practices or tech stack choices
 - Every agent and developer needs to know it implicitly
 
-**Create a SKILL when:**
+**Create a SKILL when (Procedural Knowledge):**
 - There's a multi-step process the agent needs to follow conditionally
 - Explicit heuristics, decision trees, or troubleshooting steps are needed conditionally
 - There are reference tables, API schemas, or lookup data that should only be fetched on-demand (never core behavior)
 - The knowledge applies to multiple agents or contexts but isn't repo-wide
 
-**Keep in the PROMPT when:**
+**Keep in the PROMPT when (Behavioral Knowledge):**
 - The instructions describe core identity and behavioral rules (always needed)
 - The instructions define *how* the agent thinks or acts on every invocation
 - The knowledge is concise and essential for its baseline task
