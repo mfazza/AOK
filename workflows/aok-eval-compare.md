@@ -27,7 +27,7 @@ Required files for this workflow:
 UX Rules:
 - ALWAYS use the native `ask_user` tool. Do NOT print JSON to the screen. Call the tool silently without conversational preambles.
 - Ask **ONE question at a time** — fully resolve each before moving to the next.
-- For multiple choice, use `type: "choice"`. You MUST provide an `options` array. The LAST option MUST ALWAYS be a freeform escape hatch (e.g. "Something else").
+- For multiple choice, use `type: "choice"`. You MUST provide an `options` array. Do NOT add a "Something else" or "Other" option to the array; the tool provides a freeform escape hatch automatically.
 - For freeform text input, use `type: "text"`. You MUST NOT provide an `options` array. Do NOT add escape hatches to text questions.
 </user_interaction_rules>
 
@@ -45,7 +45,6 @@ Parse `$ARGUMENTS` for the agent name. If empty, prompt:
 - `options`:
   - `label`: "{agent-1}", `description`: "{description}"
   - `label`: "{agent-2}", `description`: "{description}"
-  - `label`: "Something else (I'll tell you)", `description`: "An agent not listed"
 
 
 ## Step 2: Verify Eval Suite Exists
@@ -71,7 +70,6 @@ Then execute the aok-eval flow (Step 3 from that workflow) to scaffold evals bef
   - `label`: "google/gemini-2.5-pro", `description`: "Google: Excellent reasoning and large context"
   - `label`: "anthropic/claude-3-5-haiku-20241022", `description`: "Anthropic: Fast and cost-effective"
   - `label`: "openai/gpt-4o-mini", `description`: "OpenAI: Budget model for simple tasks"
-  - `label`: "Something else (I'll specify)", `description`: "Enter model IDs manually"
 
 
 **Minimum:** 2 models must be selected. If the user picks only 1, ask again.
@@ -190,7 +188,6 @@ Include all tables and findings for historical reference.
   - `label`: "Iterate on failures", `description`: "Fix issues found across models with /aok-iterate"
   - `label`: "Run again with different models", `description`: "Try other models not included in this comparison"
   - `label`: "Done for now", `description`: "Save results and finish"
-  - `label`: "Something else (I'll tell you)", `description`: "Tell me what you want to do"
 
 
 </process>

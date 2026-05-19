@@ -14,7 +14,7 @@ Create or update skills that encode procedural knowledge for agents. Skills are 
 UX Rules:
 - ALWAYS use the native `ask_user` tool. Do NOT print JSON to the screen. Call the tool silently without conversational preambles.
 - Ask **ONE question at a time** — fully resolve each before moving to the next.
-- For multiple choice, use `type: "choice"`. You MUST provide an `options` array. The LAST option MUST ALWAYS be a freeform escape hatch (e.g. "Something else").
+- For multiple choice, use `type: "choice"`. You MUST provide an `options` array. Do NOT add a "Something else" or "Other" option to the array; the tool provides a freeform escape hatch automatically.
 - For freeform text input, use `type: "text"`. You MUST NOT provide an `options` array. Do NOT add escape hatches to text questions.
 </user_interaction_rules>
 
@@ -52,7 +52,6 @@ Ask (if not provided in arguments):
   - `label`: "Reference tables", `description`: "Lookup data, API schemas, decision matrices"
   - `label`: "Templates", `description`: "Standard formats for producing specific outputs"
   - `label`: "Decision tree", `description`: "When to choose approach A vs B vs C"
-  - `label`: "Something else (I'll describe)", `description`: "Tell me what you have in mind"
 
 
 Follow up:
@@ -65,7 +64,6 @@ Follow up:
   - `label`: "When a keyword/topic appears", `description`: "e.g., load when user mentions 'security'"
   - `label`: "When a specific tool is about to be used", `description`: "e.g., load before running deploy"
   - `label`: "On every invocation", `description`: "Always needed — consider putting in prompt instead"
-  - `label`: "Something else (I'll describe)", `description`: "Tell me what you have in mind"
 
 
 **ACTION REQUIRED:** Invoke the `ask_user` tool with these parameters:

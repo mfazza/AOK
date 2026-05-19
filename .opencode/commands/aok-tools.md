@@ -14,7 +14,7 @@ Create or modify custom tools that add determinism to an agent's workflow. Tools
 UX Rules:
 - ALWAYS use the native `ask_user` tool. Do NOT print JSON to the screen. Call the tool silently without conversational preambles.
 - Ask **ONE question at a time** — fully resolve each before moving to the next.
-- For multiple choice, use `type: "choice"`. You MUST provide an `options` array. The LAST option MUST ALWAYS be a freeform escape hatch (e.g. "Something else").
+- For multiple choice, use `type: "choice"`. You MUST provide an `options` array. Do NOT add a "Something else" or "Other" option to the array; the tool provides a freeform escape hatch automatically.
 - For freeform text input, use `type: "text"`. You MUST NOT provide an `options` array. Do NOT add escape hatches to text questions.
 </user_interaction_rules>
 
@@ -52,7 +52,6 @@ If a description was provided, use it. Otherwise, ask:
   - `label`: "Output formatting", `description`: "Always produce output in exact structure"
   - `label`: "External query", `description`: "Call an API or system and return structured results"
   - `label`: "File operations", `description`: "Read/write specific file formats deterministically"
-  - `label`: "Something else (I'll describe)", `description`: "Tell me what you have in mind"
 
 
 Follow up with:
@@ -65,7 +64,6 @@ Follow up with:
   - `label`: "Multiple strings", `description`: "Several text parameters"
   - `label`: "A string + options", `description`: "Text input with configuration flags"
   - `label`: "Structured data (JSON)", `description`: "Complex nested input"
-  - `label`: "Something else (I'll describe)", `description`: "Tell me what you have in mind"
 
 
 ## Step 3: Design the Tool

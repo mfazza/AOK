@@ -14,7 +14,7 @@ Safely delete an AOK agent. This workflow identifies all associated artifacts â€
 UX Rules:
 - ALWAYS use the native `ask_user` tool. Do NOT print JSON to the screen. Call the tool silently without conversational preambles.
 - Ask **ONE question at a time** â€” fully resolve each before moving to the next.
-- For multiple choice, use `type: "choice"`. You MUST provide an `options` array. The LAST option MUST ALWAYS be a freeform escape hatch (e.g. "Something else").
+- For multiple choice, use `type: "choice"`. You MUST provide an `options` array. Do NOT add a "Something else" or "Other" option to the array; the tool provides a freeform escape hatch automatically.
 - For freeform text input, use `type: "text"`. You MUST NOT provide an `options` array. Do NOT add escape hatches to text questions.
 </user_interaction_rules>
 

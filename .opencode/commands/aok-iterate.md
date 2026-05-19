@@ -14,7 +14,7 @@ Analyze eval failures and systematically improve the agent. This is the iteratio
 UX Rules:
 - ALWAYS use the native `ask_user` tool. Do NOT print JSON to the screen. Call the tool silently without conversational preambles.
 - Ask **ONE question at a time** — fully resolve each before moving to the next.
-- For multiple choice, use `type: "choice"`. You MUST provide an `options` array. The LAST option MUST ALWAYS be a freeform escape hatch (e.g. "Something else").
+- For multiple choice, use `type: "choice"`. You MUST provide an `options` array. Do NOT add a "Something else" or "Other" option to the array; the tool provides a freeform escape hatch automatically.
 - For freeform text input, use `type: "text"`. You MUST NOT provide an `options` array. Do NOT add escape hatches to text questions.
 </user_interaction_rules>
 
@@ -80,7 +80,6 @@ Then ask:
   - `label`: "Apply all changes (Recommended)", `description`: "Fix all {N} issues in priority order"
   - `label`: "Apply one at a time", `description`: "Apply highest-priority fix, re-eval, then decide"
   - `label`: "Let me pick which ones", `description`: "I'll select which changes to apply"
-  - `label`: "Something else (I'll describe)", `description`: "Tell me what you have in mind"
 
 
 Wait for confirmation.

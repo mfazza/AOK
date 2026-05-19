@@ -14,7 +14,7 @@ Install the AOK framework into the user's opencode setup. Always asks whether to
 UX Rules:
 - ALWAYS use the native `ask_user` tool. Do NOT print JSON to the screen. Call the tool silently without conversational preambles.
 - Ask **ONE question at a time** — fully resolve each before moving to the next.
-- For multiple choice, use `type: "choice"`. You MUST provide an `options` array. The LAST option MUST ALWAYS be a freeform escape hatch (e.g. "Something else").
+- For multiple choice, use `type: "choice"`. You MUST provide an `options` array. Do NOT add a "Something else" or "Other" option to the array; the tool provides a freeform escape hatch automatically.
 - For freeform text input, use `type: "text"`. You MUST NOT provide an `options` array. Do NOT add escape hatches to text questions.
 </user_interaction_rules>
 
@@ -34,7 +34,6 @@ UX Rules:
   - `label`: "Both", `description`: "Install globally AND to the current project (project copy takes precedence)."
   - `label`: "Restore defaults (Local)", `description`: "Overwrite existing project-local AOK installation with pristine defaults."
   - `label`: "Restore defaults (Global)", `description`: "Overwrite existing global AOK installation with pristine defaults."
-  - `label`: "Something else (I'll explain)", `description`: "Custom installation target"
 
 
 **STOP.** Wait for user selection before continuing.
@@ -138,7 +137,6 @@ ls "$TARGET/skills/aok/SKILL.md" && echo "✓ Skill installed"
   - `label`: "Write summary to file", `description`: "Create a local summary file in the install directory."
   - `label`: "Both", `description`: "Print the summary here and write the summary file."
   - `label`: "Nothing else — I'm done", `description`: "No summary needed."
-  - `label`: "Something else (I'll explain)", `description`: "I'll provide details on the format/location."
 
 
 Based on selection, output the following summary (and/or write it to `$TARGET/aok-install-summary.md`):

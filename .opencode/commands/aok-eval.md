@@ -27,7 +27,7 @@ Required files for this workflow:
 UX Rules:
 - ALWAYS use the native `ask_user` tool. Do NOT print JSON to the screen. Call the tool silently without conversational preambles.
 - Ask **ONE question at a time** — fully resolve each before moving to the next.
-- For multiple choice, use `type: "choice"`. You MUST provide an `options` array. The LAST option MUST ALWAYS be a freeform escape hatch (e.g. "Something else").
+- For multiple choice, use `type: "choice"`. You MUST provide an `options` array. Do NOT add a "Something else" or "Other" option to the array; the tool provides a freeform escape hatch automatically.
 - For freeform text input, use `type: "text"`. You MUST NOT provide an `options` array. Do NOT add escape hatches to text questions.
 </user_interaction_rules>
 
@@ -57,7 +57,6 @@ If `$ARGUMENTS` specifies an agent name AND you can find it, you may skip the se
   - `label`: "{agent-1} ({location})", `description`: "{description from frontmatter}"
   - `label`: "{agent-2} ({location})", `description`: "{description}"
   - `label`: "{agent-3} ({location})", `description`: "{description}"
-  - `label`: "Something else (I'll point you to it)", `description`: "An agent file not in these locations"
 
 
 **STOP HERE.** Wait for the user to select before continuing.
@@ -96,7 +95,6 @@ Consult `AOK Reference `eval-taxonomy.md`` to select eval types:
   - `label`: "Use all recommended (Recommended)", `description`: "{list: Task Completion, Format Compliance, Tool Usage, Scope Adherence, etc.}"
   - `label`: "Minimal — just core checks", `description`: "Task Completion + Format + one robustness test"
   - `label`: "Comprehensive — maximum coverage", `description`: "All recommended + Quality + Adversarial + Integration"
-  - `label`: "Something else (I'll pick)", `description`: "Let me choose dimensions"
 
 
 Then generate:

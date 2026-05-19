@@ -32,7 +32,7 @@ Required files for this workflow:
 UX Rules:
 - ALWAYS use the native `ask_user` tool. Do NOT print JSON to the screen. Call the tool silently without conversational preambles.
 - Ask **ONE question at a time** — fully resolve each before moving to the next.
-- For multiple choice, use `type: "choice"`. You MUST provide an `options` array. The LAST option MUST ALWAYS be a freeform escape hatch (e.g. "Something else").
+- For multiple choice, use `type: "choice"`. You MUST provide an `options` array. Do NOT add a "Something else" or "Other" option to the array; the tool provides a freeform escape hatch automatically.
 - For freeform text input, use `type: "text"`. You MUST NOT provide an `options` array. Do NOT add escape hatches to text questions.
 </user_interaction_rules>
 
@@ -70,7 +70,6 @@ Then, even if `$ARGUMENTS` contains a name, **ALWAYS present the discovered agen
   - `label`: "{agent-2} ({location})", `description`: "{description}"
   - `label`: "{agent-3} ({location})", `description`: "{description}"
   - `label`: "All agents", `description`: "Audit everything and produce summary comparison table"
-  - `label`: "Something else (I'll point you to it)", `description`: "An agent not in these locations"
 
 
 **STOP HERE.** Wait for the user to select before continuing to Step 2.
@@ -238,7 +237,6 @@ Output as structured tables:
   - `label`: "Just the injection surfaces", `description`: "Security hardening only — add guardrails and input boundaries"
   - `label`: "Just the determinism opportunities", `description`: "Create tools to replace LLM reasoning where possible"
   - `label`: "None — I just wanted the report", `description`: "Save audit results, no changes"
-  - `label`: "Something else (I'll tell you)", `description`: "Custom selection of fixes"
 
 
 ## Step 8: Apply Fixes (if requested)
