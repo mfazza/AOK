@@ -24,6 +24,9 @@ Read these references before designing:
 **Process:**
 1. **Analyze:** Understand the core goal, required steps, and expected output format.
 2. **Draft Monolith:** Write a single, comprehensive `agent.md` prompt. Do NOT invent tools or skills yet. Put all the logic, formatting rules, and steps directly into the prompt. This is the "Monolithic Baseline".
+   - **CRITICAL (Output Format):** 
+     - If the agent is a **primary** agent, the `monolithic_prompt` MUST instruct it to output structured **Markdown** suitable for human reading.
+     - If the agent is a **subagent**, the `monolithic_prompt` MUST instruct it to output **JSON** within a single code block for machine consumption.
 3. **Recommend Metadata:** Based on the description, recommend the YAML frontmatter (mode, permissions, temperature). 
    - **CRITICAL:** `recommended_mode` MUST be exactly `"primary"` or `"subagent"`. No other values are allowed.
 4. **Output:** Return a JSON block containing the recommended metadata and the monolithic prompt.

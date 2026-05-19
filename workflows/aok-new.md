@@ -53,7 +53,7 @@ If `$ARGUMENTS` is empty, you MUST IMMEDIATELY invoke the `ask_user` tool (using
 Use these parameters for the tool:
 - `header`: "Agent Design"
 - `type`: "choice"
-- `question`: "Tell me about the agent you want to build. What is its name, its primary goal, and how should it achieve it?"
+- `question`: "Tell me about the agent you want to build. The name, its primary goal, how it achieves it, the platform/languages/frameworks/mcps where it operates, and its persona."
 - `placeholder`: "e.g. I want a PR reviewer named 'code-guard'..."
 - `options`: 
   - `label`: "Help me figure it out"
@@ -73,9 +73,12 @@ Invoke the `ask_user` tool sequentially to ask 3 guiding questions ONE AT A TIME
      - `label`: "Knowledge Assistant", `description`: "Answers questions using domain expertise"
      - `label`: "Orchestrator", `description`: "Coordinates multiple agents/steps in a pipeline"
 2. Use `type: "text"`:
-   - `header`: "I/O"
-   - `question`: "What kind of inputs will it receive, and what should the final output look like?"
+   - `header`: "Sample Prompt"
+   - `question`: "Provide a sample prompt or request you might give to this agent. This helps me understand the inputs it needs to handle."
 3. Use `type: "text"`:
+   - `header`: "Output"
+   - `question`: "What should the final output look like? (e.g. A JSON object, a markdown report, a git commit message)"
+4. Use `type: "text"`:
    - `header`: "Constraints"
    - `question`: "Are there any specific rules, constraints, or tools it must use?"
 
@@ -103,22 +106,23 @@ Use the architect's recommendations to populate the first options in these quest
 **ACTION REQUIRED:** Invoke the `ask_user` tool with these parameters:
 - `type`: "choice"
 - `header`: "Handle"
-- `question`: "I suggest the handle `{recommended_slug}`. Look right?"
+- `question`: "Choose a handle for the agent."
 - `options`:
-  - `label`: "Yes (Recommended)", `description`: "Use {recommended_slug}"
-  - `label`: "No, let me type one", `description`: "I will provide a custom handle"
+  - `label`: "{recommended_slug} (Recommended)", `description`: "Accept the suggested handle"
+
+*Instruction: If the user types a custom handle into 'Other', use that instead of the recommendation.*
 
 
 **Question 2: Operating Mode**
 **ACTION REQUIRED:** Invoke the `ask_user` tool with these parameters:
 - `type`: "choice"
 - `header`: "Mode"
-- `question`: "Based on your description, this sounds like a {recommended_mode}. Confirm?"
+- `question`: "Based on your description, this sounds like a {recommended_mode}. Confirm? (Valid modes are strictly 'primary' or 'subagent')"
 - `options`:
   - `label`: "{recommended_mode} (Recommended)", `description`: "Matches your narrative description"
   - `label`: "{the_other_valid_mode_primary_or_subagent}", `description`: "Switch to the alternative mode"
 
-*(Note: Valid modes are ONLY `"primary"` or `"subagent"`).*
+*Instruction: Since the system automatically adds an 'Other' option, if the user types a custom value, you MUST map it to either 'primary' or 'subagent'. If it cannot be mapped, ask the question again.*
 
 **Question 3: Permissions**
 **ACTION REQUIRED:** Invoke the `ask_user` tool with these parameters:
@@ -128,8 +132,10 @@ Use the architect's recommendations to populate the first options in these quest
 - `options`:
   - `label`: "Yes (Recommended)", `description`: "Use recommended permissions"
   - `label`: "Read-only", `description`: "Edit: deny, Bash: deny"
+  - `label`: "Execute (No Edit)", `description`: "Edit: deny, Bash: allow"
   - `label`: "Full access", `description`: "Edit: allow, Bash: allow"
-  - `label`: "Something else", `description`: "Custom configuration"
+
+*Instruction: If the user types a custom value into 'Other', parse their request and map it to valid permission strings (allow, deny, or ask). If ambiguous, ask a follow-up 'text' question to clarify.*
 
 
 ## Step 4: Scaffold the Monolith
