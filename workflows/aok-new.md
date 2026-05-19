@@ -39,7 +39,7 @@ Required files for this workflow:
 UX Rules:
 - ALWAYS use the native `ask_user` tool. Do NOT print JSON to the screen. Call the tool silently without conversational preambles.
 - Ask **ONE question at a time** — fully resolve each before moving to the next.
-- For multiple choice, use `type: "choice"`. You MUST provide an `options` array. The LAST option MUST ALWAYS be a freeform escape hatch (e.g. "Something else").
+- For multiple choice, use `type: "choice"`. You MUST provide an `options` array. Do NOT add a "Something else" or "Other" option to the array; the tool provides a freeform escape hatch automatically.
 - For freeform text input, use `type: "text"`. You MUST NOT provide an `options` array. Do NOT add escape hatches to text questions.
 </user_interaction_rules>
 
@@ -162,7 +162,15 @@ Wait for it to return the Markdown report with `Recommended Extractions`.
 
 Present the architect's report to the user, followed immediately by an interactive menu:
 
-**ACTION REQUIRED:** Invoke the `ask_user` tool with type "choice" to ask the user this question.
+**ACTION REQUIRED:** Invoke the `ask_user` tool with these parameters:
+- `type`: "choice"
+- `header`: "Iteration"
+- `question`: "What would you like to do next?"
+- `options`:
+  - `label`: "Extract Tool", `description`: "Move deterministic logic into a separate tool"
+  - `label`: "Extract Skill", `description`: "Move procedural knowledge into a separate skill"
+  - `label`: "Commit Changes", `description`: "Commit the current state to git"
+  - `label`: "Finish", `description`: "Exit the loop and finish"
 
 **Handling Loop Actions:**
 - **Extract Tool:** Generate the `.ts` tool file. CRITICALLY: Edit the `.md` agent prompt to delete the heavy instructions and replace them with "Call the {tool_name} tool". Re-run evals. Loop.
