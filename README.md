@@ -13,17 +13,19 @@ A metaprompting framework for creating AI agents in [opencode](https://opencode.
 ## Quick Start
 
 ```
-/aok-new            # Describe your agent idea → interview → generate → E2E test
+/aok-new            # Create the first iteration of your agent (idea → interview → generate → E2E test)
 /aok-eval           # Run evals against ANY agent (AOK-created or not)
 /aok-eval-compare   # Run evals across multiple models → comparison table
-/aok-iterate        # Improve agent based on eval results
+/aok-iterate        # Enhance agent (determinism injection, skill extraction, etc.) based on eval results
 ```
 
 ## Core Workflow
 
 ```
-/aok-new → /aok-eval → /aok-iterate → repeat until evals pass
+/aok-new (Iteration 1) → /aok-eval → /aok-iterate (Enhancements) → repeat until evals pass
 ```
+
+Enhancements like **determinism injection**, **skill extraction**, and structural prompt refinement are typically added during the iteration phase after analyzing initial performance.
 
 For **existing agents** (not created with AOK):
 ```
@@ -41,11 +43,11 @@ AOK can automatically apply fixes based on the audit, such as adding input bound
 
 | Command | Purpose |
 |---------|---------|
-| `/aok-new` | Create a new agent from scratch (interview → generate → scaffold → E2E test) |
+| `/aok-new` | Create the **first iteration** of a new agent (interview → generate → scaffold → E2E test) |
 | `/aok-eval` | Run eval suite against ANY agent — generates evals if none exist |
 | `/aok-eval-compare` | Multi-model comparison — run same evals across different models |
 | `/aok-audit` | Audit agent for token waste, injection surfaces, and determinism gaps. **Can automatically apply fixes.** |
-| `/aok-iterate` | Improve an agent based on eval failures |
+| `/aok-iterate` | **Enhance agent** based on eval failures (determinism injection, skill extraction, prompt refinement) |
 | `/aok-tools` | Add or update custom tools for an agent |
 | `/aok-skill` | Create or update a skill for an agent |
 | `/aok-delete` | Delete an agent and all associated artifacts (tools, skills, evals) |
