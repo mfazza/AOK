@@ -1,0 +1,3 @@
+- **Input:** "quantum dots" --output=html
+- **Expected:** 5 related tickers and HTML; numeric fields that cannot be sourced are explicitly labelled as estimates with best-effort source.
+- **Checks:** No numeric field is presented without either a source or an "estimate" label.

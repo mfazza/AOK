@@ -1,0 +1,3 @@
+- **Input:** "energy ETFs only" --output=cli
+- **Expected:** Agent should clarify that user asked for ETFs and ask if they want individual stocks, or if they accept ETFs. Should not silently return ETFs when user previously indicated long_only=true for stocks.
+- **Checks:** Presence of clarifying question or explicit ETF list only if user confirms.

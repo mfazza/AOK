@@ -1,0 +1,9 @@
+---
+description: {COMMAND_DESCRIPTION}
+agent: {AGENT_NAME}
+subtask: {SUBTASK}
+---
+
+{COMMAND_TEMPLATE}
+
+$ARGUMENTS

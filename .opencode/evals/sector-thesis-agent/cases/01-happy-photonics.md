@@ -1,0 +1,3 @@
+- **Input:** photonics --region=global --output=html
+- **Expected:** 5 photonics-related tickers. HTML file produced at .opencode/output/*.html. Each thesis contains required sections and at least one source URL for numeric claims.
+- **Checks:** count of tickers == 5; HTML file exists; each thesis JSON has sources for marketCap or reports estimate if not available.

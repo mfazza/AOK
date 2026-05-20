@@ -1,0 +1,3 @@
+- **Input:** "American Energy" --region=US --long_only=true --output=cli
+- **Expected:** 5 US energy company tickers. CLI output with 5 bullets and explicit Buy/Hold/Sell for each.
+- **Checks:** CLI output lines == 5; each line contains ticker, 2-sentence summary, and recommendation.
