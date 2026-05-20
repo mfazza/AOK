@@ -1,5 +1,7 @@
 # AOK — Agent Operator Kit
 
+![AOK Logo](aok.png)
+
 A metaprompting framework for creating AI agents in [opencode](https://opencode.ai). AOK guides you from idea to verified, production-ready agent through an eval-driven workflow.
 
 ## Philosophy
